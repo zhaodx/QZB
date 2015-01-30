@@ -24,7 +24,7 @@ package framework.pool
 
 			if (index > -1 && index < _size)
 			{
-				for(i:int = _size; i > index; --i)
+				for(var i:int = _size; i > index; --i)
 				{
 					_buffer[i] = _buffer[i - 1];
 				}
@@ -73,7 +73,7 @@ package framework.pool
 				{
 					--_size;
 
-					for(i:int = index; i < _size; ++i)
+					for(var i:int = index; i < _size; ++i)
 					{
 						_buffer[i] = _buffer[i + 1];
 					}
@@ -121,7 +121,7 @@ package framework.pool
 				{
 					var buffer:Vector.<Object> = new Vector.<Object>(_size);
 
-					for(index:int = 0; index < _size; ++index)
+					for(var index:int = 0; index < _size; ++index)
 					{
 						buffer[index] = _buffer[index];
 					}
