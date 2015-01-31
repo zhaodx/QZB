@@ -6,13 +6,14 @@ package framework
 
 	import framework.event.EngineEvent;
 	import framework.pool.PoolManager;
+	import framework.quadtree.QuadTree;
 
 	public class GameEngine extends EventDispatcher
 	{
-		private var 
-			_pm 	: PoolManager,
-			_stg 	: Stage,
-			_second : int;
+		private var _pm 	: PoolManager,
+					_stg 	: Stage,
+					_qtree	: QuadTree,
+					_second : int;
 
 		private static var _instance : GameEngine;
 
@@ -38,6 +39,7 @@ package framework
 			}
 
 			_pm = new PoolManager();
+			_qtree = new QuadTree();
 			_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
 		}
 
@@ -60,7 +62,7 @@ package framework
 			{
 				_second = Util.secondstamp;	
 
-				dispatchEvent(new EngineEvent(EngineEvent.SECOND_EVENT, _second));
+				dispatchEvent(new EngineEvent(EngineEvent.SECOND_EVENT, Util.secondstamp));
 			}
 		}
 		
@@ -72,6 +74,11 @@ package framework
 		public function get pool():PoolManager
 		{
 			return _pm;
+		}
+
+		public function get qtree():QuadTree
+		{
+			return _qtree;
 		}
 	}
 }

@@ -47,7 +47,7 @@ package
 
 		private function test():void
 		{
-			
+			GameEngine.inst.qtree.init();	
 		}
 	}
 }

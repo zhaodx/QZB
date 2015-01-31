@@ -16,7 +16,7 @@ package framework.pool
 			_rectanglePool = null;
 		}
 
-		public function allocateRectangle():Rectangle
+		public function get pop_rect():Rectangle
 		{
 			if (_rectanglePool && _rectanglePool.size > 0)
 			{
@@ -26,7 +26,7 @@ package framework.pool
 			return new Rectangle();
 		}
 
-		public function releaseRectangle(rect:Rectangle):void
+		public function push_rect(rect:Rectangle):void
 		{
 			if (_rectanglePool)
 			{
