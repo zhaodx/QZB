@@ -5,23 +5,51 @@ package framework
 	import flash.events.EventDispatcher;
 
 	import framework.event.*;
+	import framework.pool.*;
 
 	public class GameEngine extends EventDispatcher
 	{
-		private var _stg:Stage;
 		private var _second:int;
+
+		private var _stg:Stage;
+		private var _pm:PoolManager;
+
+		private static var _instance:GameEngine;
+
+		public static function get inst():GameEngine
+		{
+			if (!_instance)
+			{
+				_instance = new GameEngine();
+			}
+
+			return _instance;
+		}
 
 		public function init(stg:Stage):void
 		{
 			if (stg)
 			{
 				_stg = stg;
-
-				_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
 			}else
 			{
 				Debug.logError('stage is null');
+				return;
 			}
+
+			_pm = new PoolManager();
+			_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
+		}
+
+		public function dispose():void
+		{
+			if (_pm)
+			{
+				_pm.dispose();
+				_pm = null;
+			}
+
+			_stg = null;
 		}
 
 		private function onUpdate(event:Event):void
@@ -39,6 +67,11 @@ package framework
 		public function get stage():Stage
 		{
 			return _stg;
+		}
+
+		public function get pool():PoolManager
+		{
+			return _pm;
 		}
 	}
 }

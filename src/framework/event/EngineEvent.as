@@ -9,7 +9,7 @@ package framework.event
 
 		protected var _data:Object;
 
-		public EngineEvent(type:String, data:Object, bubbles:Boolean=false, cancelable:Boolean=false)
+		public function EngineEvent(type:String, data:Object, bubbles:Boolean=false, cancelable:Boolean=false):void
 		{
 			super(type, bubbles, cancelable);
 			_data = data;

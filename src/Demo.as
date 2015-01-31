@@ -39,14 +39,14 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.quality = StageQuality.LOW;
 
+			GameEngine.inst.init(stage);
+
 			test();
 		}
 
 		private function test():void
 		{
-			var pm:PoolManager = new PoolManager();
-			pm.init();
-			var rect:Rectangle = pm.allocateRectangle();
+			
 		}
 	}
 }

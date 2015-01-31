@@ -1,11 +1,13 @@
 package framework
 {
 	import flash.utils.getTimer;
+	import flash.utils.ByteArray;
+	import flash.utils.getQualifiedClassName;
 
 	public class Util
 	{
-		private var _baseTime:int;
-		private var _updateTime:Number;
+		static private var _baseTime:int;
+		static private var _updateTime:Number;
 
 		static public function get millstamp():Number
 		{
@@ -17,7 +19,7 @@ package framework
 			return _baseTime + (int)(getTimer() - _updateTime);
 		}
 
-		static public function set localtime(t:int):int
+		static public function set localtime(t:int):void
 		{
 			_updateTime = getTimer();
 
