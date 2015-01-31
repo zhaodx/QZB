@@ -1,9 +1,34 @@
 package framework
 {
-	import flash.text.TextField;
+	import flash.utils.getTimer;
 
 	public class Util
 	{
+		private var _baseTime:int;
+		private var _updateTime:Number;
+
+		static public function get millstamp():Number
+		{
+			return _baseTime + (getTimer() - _updateTime);
+		}
+
+		static public function get secondstamp():int
+		{
+			return _baseTime + (int)(getTimer() - _updateTime);
+		}
+
+		static public function set localtime(t:int):int
+		{
+			_updateTime = getTimer();
+
+			if (t < _baseTime)
+			{
+				_updateTime -= (_baseTime - t);
+			}
+
+			_baseTime = t;
+		}
+		
 		static public function formate(str:String, ...args):String
 		{
 			for (var index:int = 0; index < args.length; ++index)
@@ -12,6 +37,41 @@ package framework
 			}
 
 			return str;
+		}
+
+		static public function getClassName(classOrInst:*):String
+		{
+			var description:String = getQualifiedClassName(classOrInst);
+			var index:int = description.lastIndexOf(":");
+
+			if (index > -1)
+			{
+				return description.slice(index + 1);
+			}
+
+			return description;
+		}
+
+		static public function deepCopy(obj:Object):Object
+		{
+			var bytes:ByteArray = new ByteArray();
+			bytes.writeObject(obj);
+			bytes.position = 0;
+
+			return bytes.readObject();
+		}
+
+		static public function objectLength(obj:Object):int
+		{
+			var key:String;
+			var len:int;
+
+			for (key in obj)
+			{
+				len++;
+			}
+
+			return len;
 		}
 	}
 }
