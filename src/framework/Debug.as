@@ -2,18 +2,14 @@ package framework
 {
 	public class Debug
 	{
-		public static function log(...args):void
+		static public function log(str:String):void
 		{
-			var str:String = '[ QZB_LOG ] ';
-
-			trace(str.concat(args));
+			trace(Util.formate('[ QZB_LOG ] {0}', str));
 		}
 
-		public static function logError(...args):void
+		static public function logError(str:String):void
 		{
-			var str:String = '[ QZB_ERROR ] ';
-
-			trace(str.concat(args));
+			trace(Util.formate('[ QZB_ERROR ] {0}', str));
 		}
 	}
 }
