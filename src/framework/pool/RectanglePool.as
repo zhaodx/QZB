@@ -21,7 +21,7 @@ package framework.pool
 		{
 			if (_buffer && _size != 0)
 			{
-				var Rectangle rect = _buffer[--_size];
+				var rect:Rectangle = _buffer[--_size];
 				_buffer[_size] = null;
 
 				return rect;

@@ -22,6 +22,8 @@ package framework.pool
 			{
 				return _rectanglePool.pop();
 			}
+
+			return new Rectangle();
 		}
 
 		public function releaseRectangle(rect:Rectangle):void

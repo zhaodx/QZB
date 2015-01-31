@@ -6,6 +6,7 @@ package
 	import flash.display.StageScaleMode;
 	import flash.display.StageAlign;
 	import flash.display.StageQuality;
+	import flash.geom.Rectangle;
 
 	import framework.pool.*;
 
@@ -35,8 +36,10 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.quality = StageQuality.LOW;
 
-			var bl:BetterList = new BetterList();	
-			bl.Add(new Object());
+			var pm:PoolManager = new PoolManager();
+			pm.init();
+			var rect:Rectangle = pm.allocateRectangle();
+			
 		}
 	}
 }
