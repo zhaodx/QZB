@@ -8,6 +8,7 @@ package
 	import flash.display.StageQuality;
 	import flash.geom.Rectangle;
 
+	import framework.*;
 	import framework.pool.*;
 
 	[SWF(width='1440', height='900')]
@@ -40,6 +41,7 @@ package
 			pm.init();
 			var rect:Rectangle = pm.allocateRectangle();
 			
+			Debug.log('OK, FUNPLUS');
 		}
 	}
 }
