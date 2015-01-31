@@ -4,8 +4,8 @@ package framework
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 
-	import framework.event.*;
-	import framework.pool.*;
+	import framework.event.EngineEvent;
+	import framework.pool.PoolManager;
 
 	public class GameEngine extends EventDispatcher
 	{

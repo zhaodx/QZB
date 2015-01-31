@@ -34,8 +34,9 @@ package framework.pool
 		{
 			var tmpbf:Vector.<Rectangle>;
 			
-			tmpbf = (_buffer) ? new Vector.<Rectangle>(Math.max(_buffer.length << 1, 32), true) 
-								: new Vector.<Rectangle>(32, true);
+			tmpbf = (_buffer) ? 
+				new Vector.<Rectangle>(Math.max(_buffer.length << 1, 32), true) : 
+				new Vector.<Rectangle>(32, true);
 
 			if (_buffer && _size > 0) 
 			{

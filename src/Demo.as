@@ -8,8 +8,9 @@ package
 	import flash.display.StageQuality;
 	import flash.geom.Rectangle;
 
-	import framework.*;
-	import framework.pool.*;
+	import framework.Debug;
+	import framework.GameEngine;
+	import framework.pool.PoolManager;
 
 	[SWF(width='1440', height='900')]
 
