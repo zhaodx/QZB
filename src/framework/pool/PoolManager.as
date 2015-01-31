@@ -4,7 +4,7 @@ package framework.pool
 
 	public class PoolManager
 	{
-		private var _rectanglePool:RectanglePool;
+		private var _rectanglePool : RectanglePool;
 
 		public function init():void
 		{

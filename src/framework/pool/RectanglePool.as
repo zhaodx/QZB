@@ -4,8 +4,9 @@ package framework.pool
 
 	public class RectanglePool
 	{
-		private var _size:int;
-		private var _buffer:Vector.<Rectangle>;
+		private var 
+			_size 	: int,
+			_buffer : Vector.<Rectangle>;
 		
 		public function push(rect:Rectangle):void
 		{

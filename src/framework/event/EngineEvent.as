@@ -4,10 +4,12 @@ package framework.event
 
 	public class EngineEvent extends Event
 	{
-		static public const SECOND_EVENT:String = "second_event";
-		static public const UPDATE_EVENT:String = "update_event";
+		static public const 
+			SECOND_EVENT : String = "second_event",
+			UPDATE_EVENT : String = "update_event";
 
-		protected var _data:Object;
+		protected var 
+			_data : Object;
 
 		public function EngineEvent(type:String, data:Object, bubbles:Boolean=false, cancelable:Boolean=false):void
 		{

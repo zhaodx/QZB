@@ -9,12 +9,12 @@ package framework
 
 	public class GameEngine extends EventDispatcher
 	{
-		private var _second:int;
+		private var 
+			_pm 	: PoolManager,
+			_stg 	: Stage,
+			_second : int;
 
-		private var _stg:Stage;
-		private var _pm:PoolManager;
-
-		private static var _instance:GameEngine;
+		private static var _instance : GameEngine;
 
 		public static function get inst():GameEngine
 		{
