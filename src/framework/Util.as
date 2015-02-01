@@ -44,7 +44,8 @@ package framework
 
 		static public function getClassName(classOrInst:*):String
 		{
-			var description : String = getQualifiedClassName(classOrInst),
+			var 
+				description : String = getQualifiedClassName(classOrInst),
 				index       : int = description.lastIndexOf(":");
 
 			if (index > -1)
@@ -67,7 +68,8 @@ package framework
 
 		static public function objectLength(obj:Object):int
 		{
-			var len	: int,
+			var 
+				len	: int,
 				key	: String;
 
 			for (key in obj)

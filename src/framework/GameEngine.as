@@ -10,10 +10,11 @@ package framework
 
 	public class GameEngine extends EventDispatcher
 	{
-		private var _pm     : PoolManager,
-					_stg    : Stage,
-					_qtree  : QuadTree,
-					_second : int;
+		private var 
+			_pm     : PoolManager,
+			_stg    : Stage,
+			_qtree  : QuadTree,
+			_second : int;
 
 		private static var _instance : GameEngine;
 
