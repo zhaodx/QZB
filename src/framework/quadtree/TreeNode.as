@@ -20,8 +20,6 @@ package framework.quadtree
 			_depth = nd_depth;
 			_root = (nd_root) ? nd_root : this;
 			_parent = (nd_parent) ? nd_parent : this;
-			
-			//Debug.log("TreeNode: " + _depth + "    " + _rect);
 
 			if (hasChildren) 
 			{

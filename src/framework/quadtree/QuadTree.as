@@ -13,7 +13,7 @@ package framework.quadtree
 			_depth     : int,
 			_root      : TreeNode;
 
-		public function init(q_depth:int=5, q_width:int=4096, q_height:int=4096):void
+		public function init(q_depth:int=7, q_width:int=4096, q_height:int=4096):void
 		{
 			_depth = q_depth;
 			_root = new TreeNode(0, new Rectangle(0, 0, q_width, q_height));
