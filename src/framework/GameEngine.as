@@ -2,7 +2,9 @@ package framework
 {
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.events.EventDispatcher;
+	import flash.geom.Point;
 
 	import framework.event.EngineEvent;
 	import framework.pool.PoolManager;
@@ -15,9 +17,8 @@ package framework
 			_stg       : Stage,
 			_qtree     : QuadTree,
 			_second    : int,
-			_ui_camera : Camera,
-			_wd_camera : Camera,
-			_bg_camera : Camera;
+			_camera    : Camera,
+			_mDownPos  : Point;
 
 		private static var _instance : GameEngine;
 
@@ -42,35 +43,29 @@ package framework
 				return;
 			}
 
-			_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
 
 			_pm = new PoolManager();
 			_qtree = new QuadTree();
+			_mDownPos = new Point(0, 0);
 
-			init_camera();
+			add_event();
+			add_camera();
 		}
 
-		private function init_camera():void
+		private function add_camera():void
 		{
-			_bg_camera = new Camera(1);
-			stage.addChild(_bg_camera);
-
-			_wd_camera = new Camera(1, 600, 400, true);
-			stage.addChild(_wd_camera);
-
-			_ui_camera = new Camera(1);
-			stage.addChild(_ui_camera);
+			_camera = new Camera(100, 800, 600, true);
+			_stg.addChild(_camera);
 		}
 
-		public function dispose():void
+		private function add_event():void
 		{
-			if (_pm)
-			{
-				_pm.dispose();
-				_pm = null;
-			}
-
-			_stg = null;
+			_stg.addEventListener(Event.ENTER_FRAME, onUpdate);
+			_stg.addEventListener(Event.RESIZE, onResize);
+			_stg.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			_stg.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			_stg.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			_stg.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 
 		private function onUpdate(event:Event):void
@@ -84,10 +79,59 @@ package framework
 				dispatchEvent(new EngineEvent(EngineEvent.SECOND_EVENT, Util.secondstamp));
 			}
 		}
+
+		private function onResize(event:Event):void
+		{
+			Debug.log('onResize: ' + stage_width + ',  ' + stage_height);
+		}
 		
+		private function onMouseDown(event:MouseEvent):void
+		{
+			_mDownPos.x = event.stageX;
+			_mDownPos.y = event.stageY;
+
+			Debug.log('onMouseDown: ' + event.stageX + ',  ' + event.stageY);
+		}
+		
+		private function onMouseUp(event:MouseEvent):void
+		{
+			_mDownPos.x = 0;
+			_mDownPos.y = 0;
+
+			Debug.log('onMouseUp: ' + event.stageX + ',  ' + event.stageY);
+		}
+
+		private function onMouseMove(event:MouseEvent):void
+		{
+			if (_mDownPos.x > 0 || _mDownPos.y > 0)
+			{
+				_camera.move(_mDownPos.x - event.stageX, _mDownPos.y - event.stageY);
+
+				_mDownPos.x = event.stageX;
+				_mDownPos.y = event.stageY;
+
+				Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
+			}
+		}
+
+		private function onMouseWheel(event:MouseEvent):void
+		{
+			(event.delta < 0) ? _camera.zoom_in() : _camera.zoom_out();
+		}
+
 		public function get stage():Stage
 		{
 			return _stg;
+		}
+
+		public function get stage_width():int
+		{
+			return _stg.stageWidth;
+		}
+
+		public function get stage_height():int
+		{
+			return _stg.stageHeight;
 		}
 
 		public function get pool():PoolManager
@@ -98,6 +142,22 @@ package framework
 		public function get qtree():QuadTree
 		{
 			return _qtree;
+		}
+
+		public function get camera():Camera
+		{
+			return _camera;
+		}
+
+		public function dispose():void
+		{
+			if (_pm)
+			{
+				_pm.dispose();
+				_pm = null;
+			}
+
+			_stg = null;
 		}
 	}
 }

@@ -33,6 +33,22 @@ package framework
 			}
 		}
 
+		public function move(m_x:int, m_y:int):void
+		{
+			this.x -= m_x;	
+			this.y -= m_y;	
+		}
+
+		public function zoom_in():void
+		{
+			
+		}
+
+		public function zoom_out():void
+		{
+			
+		}
+
 		public function get depth():int
 		{
 			return _depth;
