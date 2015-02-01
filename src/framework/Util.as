@@ -7,8 +7,8 @@ package framework
 	public class Util
 	{
 		static private var 
-			_baseTime   : int,
-			_updateTime : Number;
+			_baseTime   : int = 0,
+			_updateTime : Number = 0;
 
 		static public function get millstamp():Number
 		{

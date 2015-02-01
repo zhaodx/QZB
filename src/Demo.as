@@ -9,6 +9,7 @@ package
 	import flash.geom.Rectangle;
 
 	import framework.Debug;
+	import framework.Util;
 	import framework.GameEngine;
 	import framework.pool.PoolManager;
 
@@ -42,12 +43,14 @@ package
 
 			GameEngine.inst.init(stage);
 
+			var st:Number = Util.millstamp;
 			test();
+			Debug.log("test time: " + (Util.millstamp - st));
 		}
 
 		private function test():void
 		{
-			GameEngine.inst.qtree.init();	
+			GameEngine.inst.qtree.init(6, 4096, 4096);	
 		}
 	}
 }
