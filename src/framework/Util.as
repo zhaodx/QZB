@@ -6,8 +6,9 @@ package framework
 
 	public class Util
 	{
-		static private var _baseTime	: int,
-							_updateTime	: Number;
+		static private var 
+			_baseTime   : int,
+			_updateTime : Number;
 
 		static public function get millstamp():Number
 		{
@@ -44,7 +45,7 @@ package framework
 		static public function getClassName(classOrInst:*):String
 		{
 			var description : String = getQualifiedClassName(classOrInst),
-				index		: int = description.lastIndexOf(":");
+				index       : int = description.lastIndexOf(":");
 
 			if (index > -1)
 			{
@@ -66,8 +67,8 @@ package framework
 
 		static public function objectLength(obj:Object):int
 		{
-			var len : int,
-				key : String;
+			var len	: int,
+				key	: String;
 
 			for (key in obj)
 			{

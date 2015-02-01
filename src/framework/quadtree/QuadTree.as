@@ -4,8 +4,8 @@ package framework.quadtree
 
 	public class QuadTree
 	{
-		private var _depth 	: int,
-					_root  	: TreeNode;
+		private var _depth : int,
+					_root  : TreeNode;
 
 		public function init(depth:int=4, width:int=1000, height:int=1000):void
 		{
