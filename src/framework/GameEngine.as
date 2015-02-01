@@ -13,12 +13,12 @@ package framework
 	public class GameEngine extends EventDispatcher
 	{
 		private var 
-			_pm        : PoolManager,
-			_stg       : Stage,
-			_qtree     : QuadTree,
-			_second    : int,
-			_camera    : Camera,
-			_mDownPos  : Point;
+			_pm         : PoolManager,
+			_stg        : Stage,
+			_qtree      : QuadTree,
+			_second     : int,
+			_camera     : Camera,
+			_mouse_pos  : Point;
 
 		private static var _instance : GameEngine;
 
@@ -46,7 +46,6 @@ package framework
 
 			_pm = new PoolManager();
 			_qtree = new QuadTree();
-			_mDownPos = new Point(0, 0);
 
 			add_event();
 			add_camera();
@@ -60,12 +59,12 @@ package framework
 
 		private function add_event():void
 		{
-			_stg.addEventListener(Event.ENTER_FRAME, onUpdate);
-			_stg.addEventListener(Event.RESIZE, onResize);
-			_stg.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			_stg.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
-			_stg.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_stg.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			_stg.addEventListener(Event.RESIZE, onResize, false, 0, true);
+			_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
+			_stg.addEventListener(MouseEvent.MOUSE_UP, onMouseUp, false, 0, true);
+			_stg.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false, 0, true);
+			_stg.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, 0, true);
+			_stg.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, true);
 		}
 
 		private function onUpdate(event:Event):void
@@ -87,30 +86,28 @@ package framework
 		
 		private function onMouseDown(event:MouseEvent):void
 		{
-			_mDownPos.x = event.stageX;
-			_mDownPos.y = event.stageY;
+			_mouse_pos = new Point(event.stageX, event.stageY);
 
-			Debug.log('onMouseDown: ' + event.stageX + ',  ' + event.stageY);
+			//Debug.log('onMouseDown: ' + event.stageX + ',  ' + event.stageY);
 		}
 		
 		private function onMouseUp(event:MouseEvent):void
 		{
-			_mDownPos.x = 0;
-			_mDownPos.y = 0;
+			_mouse_pos = null;
 
-			Debug.log('onMouseUp: ' + event.stageX + ',  ' + event.stageY);
+			//Debug.log('onMouseUp: ' + event.stageX + ',  ' + event.stageY);
 		}
 
 		private function onMouseMove(event:MouseEvent):void
 		{
-			if (_mDownPos.x > 0 || _mDownPos.y > 0)
+			if (_mouse_pos)
 			{
-				_camera.move(_mDownPos.x - event.stageX, _mDownPos.y - event.stageY);
+				_camera.move(event.stageX - _mouse_pos.x, event.stageY - _mouse_pos.y);
 
-				_mDownPos.x = event.stageX;
-				_mDownPos.y = event.stageY;
+				_mouse_pos.x = event.stageX;
+				_mouse_pos.y = event.stageY;
 
-				Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
+				//Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
 			}
 		}
 

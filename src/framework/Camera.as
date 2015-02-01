@@ -12,6 +12,9 @@ package framework
 
 		public function Camera(c_d:int, c_w:int=0, c_h:int=0, use_bmp:Boolean=false)
 		{
+			this.mouseEnabled = false;
+			this.mouseChildren = false;
+
 			_depth = c_d;
 
 			if (use_bmp)
@@ -33,10 +36,10 @@ package framework
 			}
 		}
 
-		public function move(m_x:int, m_y:int):void
+		public function move(offset_x:int, offset_y:int):void
 		{
-			this.x -= m_x;	
-			this.y -= m_y;	
+			this.x += offset_x;	
+			this.y += offset_y;	
 		}
 
 		public function zoom_in():void
