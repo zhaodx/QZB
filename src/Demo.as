@@ -50,7 +50,7 @@ package
 
 		private function test():void
 		{
-			GameEngine.inst.qtree.init(6, 4096, 4096);	
+			GameEngine.inst.qtree.init(7, 4096, 4096);	
 		}
 	}
 }

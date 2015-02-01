@@ -1,6 +1,5 @@
 package framework.quadtree
 {
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	import framework.GameEngine;
@@ -13,7 +12,6 @@ package framework.quadtree
 			_root     : TreeNode,
 			_parent   : TreeNode,
 			_rect     : Rectangle,
-			_pixels   : Vector.<Point>,
 			_children : Vector.<TreeNode>;
 
 		public function TreeNode(nd_depth:int, nd_rect:Rectangle, nd_root:TreeNode=null, nd_parent:TreeNode=null)
@@ -25,7 +23,10 @@ package framework.quadtree
 			
 			//Debug.log("TreeNode: " + _depth + "    " + _rect);
 
-			(isPixNode) ? GameEngine.inst.qtree.addPixNode(this) : initChildren();
+			if (hasChildren) 
+			{
+				initChildren();
+			}
 		}
 
 		private function initChildren():void
@@ -45,26 +46,6 @@ package framework.quadtree
 			_children[1] = new TreeNode(ch_d, rect_ne, _root, this);
 			_children[2] = new TreeNode(ch_d, rect_sw, _root, this);
 			_children[3] = new TreeNode(ch_d, rect_se, _root, this);
-		}
-
-		public function initPixels():void
-		{
-			var 
-				index  : int,
-				p_w    : int = _root.rect.width >> GameEngine.inst.qtree.depth,
-				p_h    : int = _root.rect.height >> GameEngine.inst.qtree.depth;
-
-			_pixels = new Vector.<Point>(p_w * p_h, true);
-
-			for (var w:int = 0; w < p_w; ++w)
-			{
-				for (var h:int = 0; h < p_h; ++h)
-				{
-					_pixels[index] = new Point(_rect.x + w, _rect.y + h);
-				}
-			}
-
-			//Debug.log("_pixels: " + _pixels.length);
 		}
 
 		public function get depth():int
@@ -92,14 +73,9 @@ package framework.quadtree
 			return _children;
 		}
 
-		public function get pixels():Vector.<Point>
+		public function get hasChildren():Boolean
 		{
-			return _pixels;
-		}
-
-		public function get isPixNode():Boolean
-		{
-			return _depth == GameEngine.inst.qtree.depth;
+			return _depth < GameEngine.inst.qtree.depth;
 		}
 	}
 }
