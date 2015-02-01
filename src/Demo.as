@@ -8,8 +8,9 @@ package
 	import flash.display.StageQuality;
 	import flash.geom.Rectangle;
 
-	import framework.Debug;
 	import framework.Util;
+	import framework.Debug;
+	import framework.Camera;
 	import framework.GameEngine;
 	import framework.pool.PoolManager;
 

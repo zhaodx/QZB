@@ -11,10 +11,13 @@ package framework
 	public class GameEngine extends EventDispatcher
 	{
 		private var 
-			_pm     : PoolManager,
-			_stg    : Stage,
-			_qtree  : QuadTree,
-			_second : int;
+			_pm        : PoolManager,
+			_stg       : Stage,
+			_qtree     : QuadTree,
+			_second    : int,
+			_ui_camera : Camera,
+			_wd_camera : Camera,
+			_bg_camera : Camera;
 
 		private static var _instance : GameEngine;
 
@@ -39,9 +42,24 @@ package framework
 				return;
 			}
 
+			_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
+
 			_pm = new PoolManager();
 			_qtree = new QuadTree();
-			_stg.addEventListener(Event.ENTER_FRAME, onUpdate, false, 0, true);
+
+			init_camera();
+		}
+
+		private function init_camera():void
+		{
+			_bg_camera = new Camera(1);
+			stage.addChild(_bg_camera);
+
+			_wd_camera = new Camera(1, 600, 400, true);
+			stage.addChild(_wd_camera);
+
+			_ui_camera = new Camera(1);
+			stage.addChild(_ui_camera);
 		}
 
 		public function dispose():void
