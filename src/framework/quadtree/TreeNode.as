@@ -21,6 +21,8 @@ package framework.quadtree
 			_root = (nd_root) ? nd_root : this;
 			_parent = (nd_parent) ? nd_parent : this;
 
+			GameEngine.inst.qtree.push_node(nd_depth, this);
+
 			if (hasChildren) 
 			{
 				initChildren();

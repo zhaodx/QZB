@@ -3,6 +3,7 @@ package framework
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
 
 	public class Camera extends Sprite
 	{
@@ -18,28 +19,34 @@ package framework
 
 			_depth = cdepth;
 			_use_bmp = usebmp;
+
+			if (_use_bmp)
+			{
+				_buffer = new Bitmap(new BitmapData(
+						GameEngine.inst.world_width, 
+						GameEngine.inst.world_height, 
+						false, 
+						0xffffff), 'auto', true);
+
+				addChild(_buffer);
+
+				draw_qtree();
+			}
+		}
+
+		private function draw_qtree():void
+		{
+			foreach(var node:TreeNode in _qtree.get_nodes(_qtree.depth))
+			{
+				_buffer.bitmapData.copyPixels(_qtree.node_bmp.bitmapData, 
+					new Rectangle(0, 0, node.rect.width, node.rect.height), 
+					new Point(node.rect.x, node.rect.y));		
+			}
 		}
 
 		public function resize(swidth:int, sheight:int):void
 		{
-			if (_buffer)
-			{
-				removeChild(_buffer);
-
-				_buffer.bitmapData.dispose();
-				_buffer.bitmapData = null;
-				_buffer = null;
-			}
-
-			if (_use_bmp)
-			{
-				_buffer = new Bitmap(
-					new BitmapData(swidth, sheight, false, 0x000000), 
-					'auto', 
-					true);
-
-				addChild(_buffer);
-			}
+			//addChild(GameEngine.inst.qtree.node_bmp);
 		}
 
 		public function move(offset_x:int, offset_y:int):void
@@ -50,12 +57,30 @@ package framework
 
 		public function zoom_in():void
 		{
-			
+			if (_depth < 100)	
+			{
+				_depth += 2;
+			}else
+			{
+				_depth = 100;
+			}
+
+			this.scaleX = _depth / 100;
+			this.scaleY = _depth / 100;
 		}
 
 		public function zoom_out():void
 		{
-			
+			if (_depth > 50)	
+			{
+				_depth -= 2;
+			}else
+			{
+				_depth = 50;
+			}
+
+			this.scaleX = _depth / 100;
+			this.scaleY = _depth / 100;
 		}
 
 		public function get depth():int
@@ -66,6 +91,16 @@ package framework
 		public function get use_bmp():Boolean
 		{
 			return _use_bmp;
+		}
+
+		public function get rect():Rectangle
+		{
+			if (_use_bmp)
+			{
+				return _buffer.bitmapData.rect;
+			}
+
+			return new Rectangle(this.x, this.y, this.width, this.height);
 		}
 	}
 }

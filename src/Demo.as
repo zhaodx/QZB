@@ -20,8 +20,6 @@ package
 	{
 		public function Demo()
 		{
-			Debug.log('OK, FUNPLUS');
-
 			if (stage)
 			{
 				init();
@@ -42,7 +40,7 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.quality = StageQuality.LOW;
 
-			GameEngine.inst.init(stage);
+			GameEngine.inst.init(stage, 4096, 4096);
 
 			var st:Number = Util.millstamp;
 			test();
@@ -51,7 +49,6 @@ package
 
 		private function test():void
 		{
-			GameEngine.inst.qtree.init(7, 4096, 4096);	
 		}
 	}
 }

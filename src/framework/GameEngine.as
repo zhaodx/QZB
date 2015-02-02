@@ -13,12 +13,14 @@ package framework
 	public class GameEngine extends EventDispatcher
 	{
 		private var 
-			_pm         : PoolManager,
-			_stg        : Stage,
-			_qtree      : QuadTree,
-			_second     : int,
-			_camera     : Camera,
-			_mouse_pos  : Point;
+			_pm           : PoolManager,
+			_stg          : Stage,
+			_qtree        : QuadTree,
+			_second       : int,
+			_camera       : Camera,
+			_mouse_pos    : Point,
+			_world_width  : int,
+			_world_height : int;
 
 		private static var _instance : GameEngine;
 
@@ -32,29 +34,27 @@ package framework
 			return _instance;
 		}
 
-		public function init(stg:Stage):void
+		public function init(stg:Stage, width:int, height:int):void
 		{
 			if (stg)
 			{
 				_stg = stg;
+
+				Debug.log('OK, FUNPLUS');
 			}else
 			{
 				Debug.logError('stage is null');
 				return;
 			}
 
+			_world_width = width;
+			_world_height = height;
 
 			_pm = new PoolManager();
-			_qtree = new QuadTree();
 
 			add_event();
+			add_quadtree();
 			add_camera();
-		}
-
-		private function add_camera():void
-		{
-			_camera = new Camera(100, true);
-			_stg.addChild(_camera);
 		}
 
 		private function add_event():void
@@ -65,6 +65,18 @@ package framework
 			_stg.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown, false, 0, true);
 			_stg.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove, false, 0, true);
 			_stg.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, true);
+		}
+
+		private function add_quadtree():void
+		{
+			_qtree = new QuadTree();
+			_qtree.init(7, _world_width, _world_height);
+		}
+
+		private function add_camera():void
+		{
+			_camera = new Camera(100, true);
+			_stg.addChild(_camera);
 		}
 
 		private function onUpdate(event:Event):void
@@ -143,6 +155,16 @@ package framework
 		public function get camera():Camera
 		{
 			return _camera;
+		}
+
+		public function get world_width():int
+		{
+			return _world_width;
+		}
+
+		public function get world_height():int
+		{
+			return _world_height;
 		}
 
 		public function dispose():void
