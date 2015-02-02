@@ -3,7 +3,12 @@ package framework
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
+
+	import framework.quadtree.TreeNode;
+	import framework.quadtree.QuadTree;
 
 	public class Camera extends Sprite
 	{
@@ -36,9 +41,10 @@ package framework
 
 		private function draw_qtree():void
 		{
-			foreach(var node:TreeNode in _qtree.get_nodes(_qtree.depth))
+			var qtree : QuadTree = GameEngine.inst.qtree;
+			for each(var node:TreeNode in qtree.get_nodes(qtree.depth))
 			{
-				_buffer.bitmapData.copyPixels(_qtree.node_bmp.bitmapData, 
+				_buffer.bitmapData.copyPixels(qtree.node_bmp.bitmapData, 
 					new Rectangle(0, 0, node.rect.width, node.rect.height), 
 					new Point(node.rect.x, node.rect.y));		
 			}
