@@ -13,9 +13,13 @@ package framework
 	public class Camera extends Sprite
 	{
 		private var 
-			_depth   : int,
-			_buffer  : Bitmap,
-			_use_bmp : Boolean;
+			_depth       : int,
+			_buffer      : Bitmap,
+			_use_bmp     : Boolean,
+			_qtree       : QuadTree,
+			_render_pos  : Point,
+			_render_rect : Rectangle,
+			_camera_rect : Rectangle;
 
 		public function Camera(cdepth:int, usebmp:Boolean=false)
 		{
@@ -24,6 +28,10 @@ package framework
 
 			_depth = cdepth;
 			_use_bmp = usebmp;
+			_qtree = GameEngine.inst.qtree;
+			_camera_rect = new Rectangle(100, 50, 1200, 700);
+			_render_pos = new Point(0, 0);
+			_render_rect = new Rectangle(0, 0, 0, 0);
 
 			if (_use_bmp)
 			{
@@ -34,31 +42,42 @@ package framework
 						0xffffff), 'auto', true);
 
 				addChild(_buffer);
-
-				draw_qtree();
 			}
 		}
 
-		private function draw_qtree():void
+		public function render():void
 		{
-			var qtree : QuadTree = GameEngine.inst.qtree;
-			for each(var node:TreeNode in qtree.get_nodes(qtree.depth))
+			for each(var node:TreeNode in _qtree.get_nodes(_qtree.depth))
 			{
-				_buffer.bitmapData.copyPixels(qtree.node_bmp.bitmapData, 
-					new Rectangle(0, 0, node.rect.width, node.rect.height), 
-					new Point(node.rect.x, node.rect.y));		
+				if (_camera_rect.containsRect(node.rect))
+				{
+					_render_pos.x = node.rect.x;
+					_render_pos.y = node.rect.y;
+
+					_render_rect.width = node.rect.width;
+					_render_rect.height = node.rect.height;
+
+					_buffer.bitmapData.copyPixels(
+							_qtree.node_bmp.bitmapData, 
+							_render_rect,
+							_render_pos);
+				}
 			}
 		}
 
 		public function resize(swidth:int, sheight:int):void
 		{
-			//addChild(GameEngine.inst.qtree.node_bmp);
+			//_camera_rect.width = swidth;
+			//_camera_rect.height = sheight;
 		}
 
 		public function move(offset_x:int, offset_y:int):void
 		{
 			this.x += offset_x;	
 			this.y += offset_y;	
+
+			_camera_rect.x -= offset_x;
+			_camera_rect.y -= offset_y;
 		}
 
 		public function zoom_in():void
@@ -101,12 +120,7 @@ package framework
 
 		public function get rect():Rectangle
 		{
-			if (_use_bmp)
-			{
-				return _buffer.bitmapData.rect;
-			}
-
-			return new Rectangle(this.x, this.y, this.width, this.height);
+			return _camera_rect;
 		}
 	}
 }

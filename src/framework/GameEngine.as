@@ -52,9 +52,9 @@ package framework
 
 			_pm = new PoolManager();
 
-			add_event();
 			add_quadtree();
 			add_camera();
+			add_event();
 		}
 
 		private function add_event():void
@@ -89,6 +89,8 @@ package framework
 
 				dispatchEvent(new EngineEvent(EngineEvent.SECOND_EVENT, Util.secondstamp));
 			}
+
+			_camera.render();
 		}
 
 		private function onResize(event:Event):void
@@ -124,7 +126,7 @@ package framework
 		private function onMouseWheel(event:MouseEvent):void
 		{
 			//Debug.log('onMouseWheel: ' + event.delta);
-			(event.delta < 0) ? _camera.zoom_in() : _camera.zoom_out();
+			//(event.delta < 0) ? _camera.zoom_in() : _camera.zoom_out();
 		}
 
 		public function get stage():Stage

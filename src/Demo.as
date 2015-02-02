@@ -33,7 +33,7 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 
-			stage.frameRate = 60;
+			stage.frameRate = 30;
 			stage.stageFocusRect = false;
 			stage.showDefaultContextMenu = false;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -49,6 +49,24 @@ package
 
 		private function test():void
 		{
+			draw_camera();
+		}
+
+		private function draw_camera():void
+		{
+			var sp : Sprite = new Sprite();
+
+			sp.graphics.lineStyle(4, 0xff0000);
+			sp.graphics.drawRect(
+				0, 
+				0, 
+				GameEngine.inst.camera.rect.width - 8, 
+				GameEngine.inst.camera.rect.height - 8);
+
+			stage.addChild(sp);
+
+			sp.x = 100;
+			sp.y = 50;
 		}
 	}
 }
