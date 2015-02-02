@@ -7,28 +7,34 @@ package framework
 	public class Camera extends Sprite
 	{
 		private var 
-			_depth  : int,
-			_buffer : Bitmap;
+			_depth   : int,
+			_buffer  : Bitmap,
+			_use_bmp : Boolean;
 
-		public function Camera(c_d:int, c_w:int=0, c_h:int=0, use_bmp:Boolean=false)
+		public function Camera(cdepth:int, usebmp:Boolean=false)
 		{
 			this.mouseEnabled = false;
 			this.mouseChildren = false;
 
-			_depth = c_d;
-
-			if (use_bmp)
-			{
-				init_buffer(c_w, c_h);
-			}
+			_depth = cdepth;
+			_use_bmp = usebmp;
 		}
 
-		private function init_buffer(c_w:int, c_h:int):void
+		public function resize(swidth:int, sheight:int):void
 		{
-			if (!_buffer)
+			if (_buffer)
+			{
+				removeChild(_buffer);
+
+				_buffer.bitmapData.dispose();
+				_buffer.bitmapData = null;
+				_buffer = null;
+			}
+
+			if (_use_bmp)
 			{
 				_buffer = new Bitmap(
-					new BitmapData(c_w, c_h, false, 0x000000), 
+					new BitmapData(swidth, sheight, false, 0x000000), 
 					'auto', 
 					true);
 
@@ -55,6 +61,11 @@ package framework
 		public function get depth():int
 		{
 			return _depth;
+		}
+
+		public function get use_bmp():Boolean
+		{
+			return _use_bmp;
 		}
 	}
 }

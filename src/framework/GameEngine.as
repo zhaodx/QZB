@@ -53,7 +53,7 @@ package framework
 
 		private function add_camera():void
 		{
-			_camera = new Camera(100, 800, 600, true);
+			_camera = new Camera(100, true);
 			_stg.addChild(_camera);
 		}
 
@@ -81,38 +81,37 @@ package framework
 
 		private function onResize(event:Event):void
 		{
-			Debug.log('onResize: ' + stage_width + ',  ' + stage_height);
+			//Debug.log('onResize: ' + stage_width + ',  ' + stage_height);
+			_camera.resize(stage_width, stage_height);
 		}
 		
 		private function onMouseDown(event:MouseEvent):void
 		{
-			_mouse_pos = new Point(event.stageX, event.stageY);
-
 			//Debug.log('onMouseDown: ' + event.stageX + ',  ' + event.stageY);
+			_mouse_pos = new Point(event.stageX, event.stageY);
 		}
 		
 		private function onMouseUp(event:MouseEvent):void
 		{
-			_mouse_pos = null;
-
 			//Debug.log('onMouseUp: ' + event.stageX + ',  ' + event.stageY);
+			_mouse_pos = null;
 		}
 
 		private function onMouseMove(event:MouseEvent):void
 		{
+			//Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
 			if (_mouse_pos)
 			{
 				_camera.move(event.stageX - _mouse_pos.x, event.stageY - _mouse_pos.y);
 
 				_mouse_pos.x = event.stageX;
 				_mouse_pos.y = event.stageY;
-
-				//Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
 			}
 		}
 
 		private function onMouseWheel(event:MouseEvent):void
 		{
+			//Debug.log('onMouseWheel: ' + event.delta);
 			(event.delta < 0) ? _camera.zoom_in() : _camera.zoom_out();
 		}
 
