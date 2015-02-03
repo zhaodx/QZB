@@ -8,6 +8,7 @@ package framework.quadtree
 
 	import framework.Util;
 	import framework.Debug;
+	import framework.RenderObject;
 
 	public class QuadTree
 	{
@@ -34,9 +35,9 @@ package framework.quadtree
 			_root = new TreeNode(0, new Rectangle(0, 0, q_width, q_height));
 		}
 
-		public function add_object():void
+		public function add_object(robj:RenderObject):void
 		{
-			
+			_root.add_object(robj);			
 		}
 
 		public function push_node(q_depth:int, node:TreeNode):void

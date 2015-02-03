@@ -4,6 +4,7 @@ package framework.quadtree
 
 	import framework.GameEngine;
 	import framework.Debug;
+	import framework.RenderObject;
 
 	public class TreeNode
 	{
@@ -12,6 +13,7 @@ package framework.quadtree
 			_root       : TreeNode,
 			_parent     : TreeNode,
 			_rect       : Rectangle,
+			_objects    : Vector.<RenderObject>,
 			_children   : Vector.<TreeNode>,
 			_pix_vector : Vector.<uint>;
 
@@ -21,6 +23,7 @@ package framework.quadtree
 			_depth = nd_depth;
 			_root = (nd_root) ? nd_root : this;
 			_parent = (nd_parent) ? nd_parent : this;
+			_objects = new Vector.<RenderObject>();
 
 			GameEngine.inst.qtree.push_node(nd_depth, this);
 
@@ -51,6 +54,28 @@ package framework.quadtree
 			_children[1] = new TreeNode(ch_d, rect_ne, _root, this);
 			_children[2] = new TreeNode(ch_d, rect_sw, _root, this);
 			_children[3] = new TreeNode(ch_d, rect_se, _root, this);
+		}
+
+		public function add_object(robj:RenderObject):void
+		{
+			if (_rect.intersects(robj.rect))
+			{
+				if (hasChildren)
+				{
+					for each(var node:TreeNode in _children)
+					{
+						node.add_object(robj);
+					}
+				}else
+				{
+					_objects.push(robj);
+				}
+			}
+		}
+
+		public function delete_object():void
+		{
+			_objects = new Vector.<RenderObject>();
 		}
 
 		public function get depth():int

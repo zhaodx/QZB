@@ -50,16 +50,23 @@ package
 		private function test():void
 		{
 			draw_camera();
+
+			draw_object();
 		}
 
 		private function draw_object():void
 		{
-			for (var i:int=0; i<500; ++i)
+			for (var i:int=0; i<2; ++i)
 			{
 				var robj : RenderObject = new RenderObject(GameEngine.inst.qtree.node_bmp.bitmapData);	
 				
 				robj.rect.x = 100 + Math.random() * 1024;
 				robj.rect.y = 50 + Math.random() * 512;
+
+				robj.rect.x = 102;
+				robj.rect.y = 53;
+
+				GameEngine.inst.qtree.add_object(robj);
 			}
 		}
 
