@@ -23,7 +23,7 @@ package framework.quadtree
 			_depth = nd_depth;
 			_root = (nd_root) ? nd_root : this;
 			_parent = (nd_parent) ? nd_parent : this;
-			_objects = new Vector.<RenderObject>();
+			_objects = new Vector.<RenderObject>(100, true);
 
 			GameEngine.inst.qtree.push_node(nd_depth, this);
 
@@ -69,13 +69,19 @@ package framework.quadtree
 				}else
 				{
 					_objects.push(robj);
+					robj.add_node(this);
 				}
 			}
 		}
 
-		public function delete_object():void
+		public function remove_object(robj:RenderObject):void
 		{
-			_objects = new Vector.<RenderObject>();
+			var index:int = _objects.indexOf(robj);	
+
+			if (index != -1)
+			{
+				_objects[index] = null;
+			}
 		}
 
 		public function get depth():int
