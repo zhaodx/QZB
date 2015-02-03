@@ -70,7 +70,6 @@ package framework
 		private function add_quadtree():void
 		{
 			_qtree = new QuadTree();
-			_qtree.init(7, _world_width, _world_height);
 		}
 
 		private function add_camera():void
@@ -96,7 +95,7 @@ package framework
 		private function onResize(event:Event):void
 		{
 			//Debug.log('onResize: ' + stage_width + ',  ' + stage_height);
-			_camera.resize(stage_width, stage_height);
+			//_camera.resize(stage_width, stage_height);
 		}
 		
 		private function onMouseDown(event:MouseEvent):void
@@ -116,7 +115,7 @@ package framework
 			//Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
 			if (_mouse_pos)
 			{
-				_camera.move(event.stageX - _mouse_pos.x, event.stageY - _mouse_pos.y);
+				//_camera.move(event.stageX - _mouse_pos.x, event.stageY - _mouse_pos.y);
 
 				_mouse_pos.x = event.stageX;
 				_mouse_pos.y = event.stageY;

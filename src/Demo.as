@@ -40,11 +40,11 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.quality = StageQuality.LOW;
 
-			GameEngine.inst.init(stage, 4096, 4096);
-
 			var st:Number = Util.millstamp;
+			GameEngine.inst.init(stage, 4096, 4096);
+			Debug.log("Engine init time: " + (Util.millstamp - st));
+
 			test();
-			Debug.log("test time: " + (Util.millstamp - st));
 		}
 
 		private function test():void
@@ -55,18 +55,13 @@ package
 		private function draw_camera():void
 		{
 			var sp : Sprite = new Sprite();
-
-			sp.graphics.lineStyle(4, 0xff0000);
+			sp.graphics.lineStyle(1, 0xff0000);
 			sp.graphics.drawRect(
-				0, 
-				0, 
-				GameEngine.inst.camera.rect.width - 8, 
-				GameEngine.inst.camera.rect.height - 8);
-
+				GameEngine.inst.camera.rect.x,
+				GameEngine.inst.camera.rect.y,
+				GameEngine.inst.camera.rect.width, 
+				GameEngine.inst.camera.rect.height);
 			stage.addChild(sp);
-
-			sp.x = 100;
-			sp.y = 50;
 		}
 	}
 }

@@ -58,13 +58,13 @@ package framework.quadtree
 			{
 				var 
 					sp     : Sprite = new Sprite(),
-					width  : int = GameEngine.inst.world_width >> _depth,
-					height : int = GameEngine.inst.world_height >> _depth,
+					width  : int = GameEngine.inst.camera.rect.width >> _depth,
+					height : int = GameEngine.inst.camera.rect.height >> _depth,
 					bmd    : BitmapData = new BitmapData(width, height, false, 0xffffff);
 
 				sp.graphics.lineStyle(1, 0x0000ff);
-				sp.graphics.beginFill(0x0000ff, .1);
-				sp.graphics.drawRect(0,0, width - 2, height - 2);
+				sp.graphics.beginFill(0x0000ff, .2);
+				sp.graphics.drawRect(0, 0, width, height);
 				sp.graphics.endFill();
 
 				bmd.draw(sp);

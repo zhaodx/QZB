@@ -25,50 +25,55 @@ package framework
 		{
 			this.mouseEnabled = false;
 			this.mouseChildren = false;
+			this.x = 100;
+			this.y = 50;
 
 			_depth = cdepth;
 			_use_bmp = usebmp;
 			_qtree = GameEngine.inst.qtree;
-			_camera_rect = new Rectangle(100, 50, 1200, 700);
+			_camera_rect = new Rectangle(100, 50, 1024, 512);
 			_render_pos = new Point(0, 0);
 			_render_rect = new Rectangle(0, 0, 0, 0);
 
 			if (_use_bmp)
 			{
 				_buffer = new Bitmap(new BitmapData(
-						GameEngine.inst.world_width, 
-						GameEngine.inst.world_height, 
+						_camera_rect.width, 
+						_camera_rect.height, 
 						false, 
 						0xffffff), 'auto', true);
 
 				addChild(_buffer);
 			}
+
+			_qtree.init(6, _camera_rect.width, _camera_rect.height)
 		}
 
 		public function render():void
 		{
+			_buffer.bitmapData.lock();
+
 			for each(var node:TreeNode in _qtree.get_nodes(_qtree.depth))
 			{
-				if (_camera_rect.containsRect(node.rect))
-				{
-					_render_pos.x = node.rect.x;
-					_render_pos.y = node.rect.y;
+				_render_pos.x = node.rect.x;
+				_render_pos.y = node.rect.y;
 
-					_render_rect.width = node.rect.width;
-					_render_rect.height = node.rect.height;
+				_render_rect.width = node.rect.width;
+				_render_rect.height = node.rect.height;
 
-					_buffer.bitmapData.copyPixels(
-							_qtree.node_bmp.bitmapData, 
-							_render_rect,
-							_render_pos);
-				}
+				_buffer.bitmapData.copyPixels(
+						_qtree.node_bmp.bitmapData, 
+						_render_rect,
+						_render_pos);
 			}
+
+			_buffer.bitmapData.unlock();
 		}
 
 		public function resize(swidth:int, sheight:int):void
 		{
-			//_camera_rect.width = swidth;
-			//_camera_rect.height = sheight;
+			_camera_rect.width = swidth;
+			_camera_rect.height = sheight;
 		}
 
 		public function move(offset_x:int, offset_y:int):void
