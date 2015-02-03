@@ -5,17 +5,17 @@ package framework.quadtree
 	import framework.GameEngine;
 	import framework.Debug;
 	import framework.RenderObject;
+	import framework.zbuffer.Buffer;
 
 	public class TreeNode
 	{
 		private var 
-			_depth      : int,
 			_root       : TreeNode,
-			_parent     : TreeNode,
 			_rect       : Rectangle,
-			_objects    : Vector.<RenderObject>,
-			_children   : Vector.<TreeNode>,
-			_pix_vector : Vector.<uint>;
+			_depth      : int,
+			_parent     : TreeNode,
+			_zbuffer    : Buffer,
+			_children   : Vector.<TreeNode>;
 
 		public function TreeNode(nd_depth:int, nd_rect:Rectangle, nd_root:TreeNode=null, nd_parent:TreeNode=null)
 		{
@@ -23,7 +23,6 @@ package framework.quadtree
 			_depth = nd_depth;
 			_root = (nd_root) ? nd_root : this;
 			_parent = (nd_parent) ? nd_parent : this;
-			_objects = new Vector.<RenderObject>(100, true);
 
 			GameEngine.inst.qtree.push_node(nd_depth, this);
 
@@ -32,8 +31,7 @@ package framework.quadtree
 				initChildren();
 			}else
 			{
-				var vrect : Rectangle = new Rectangle(0, 0, _rect.width, _rect.height);
-				_pix_vector = GameEngine.inst.qtree.node_bmp.bitmapData.getVector(vrect);
+				_zbuffer = new Buffer(_rect);
 			}
 		}
 
@@ -68,19 +66,24 @@ package framework.quadtree
 					}
 				}else
 				{
-					_objects.push(robj);
-					robj.add_node(this);
+					_zbuffer.add_object(robj);
 				}
 			}
 		}
 
-		public function remove_object(robj:RenderObject):void
+		public function render():void
 		{
-			var index:int = _objects.indexOf(robj);	
-
-			if (index != -1)
+			if (_zbuffer)
 			{
-				_objects[index] = null;
+				_zbuffer.render();
+			}
+		}
+
+		public function clear_buffer():void
+		{
+			if (_zbuffer)
+			{
+				_zbuffer.clear();
 			}
 		}
 
@@ -116,7 +119,7 @@ package framework.quadtree
 
 		public function get pix_vector():Vector.<uint>
 		{
-			return _pix_vector;
+			return _zbuffer.pix_vector;
 		}
 	}
 }

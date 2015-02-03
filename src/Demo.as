@@ -66,7 +66,7 @@ package
 				robj.rect.x = 102;
 				robj.rect.y = 53;
 
-				GameEngine.inst.qtree.add_object(robj);
+				GameEngine.inst.camera.add_object(robj);
 			}
 		}
 

@@ -19,7 +19,8 @@ package framework
 			_use_bmp     : Boolean,
 			_render_pos  : Point,
 			_render_rect : Rectangle,
-			_camera_rect : Rectangle;
+			_camera_rect : Rectangle,
+			_render_list : Vector.<RenderObject>;
 
 		public function Camera(cdepth:int, usebmp:Boolean=false)
 		{
@@ -31,6 +32,7 @@ package framework
 			_camera_rect = new Rectangle(100, 50, 1024, 512);
 			_render_pos = new Point(0, 0);
 			_render_rect = new Rectangle(0, 0, 0, 0);
+			_render_list = new Vector.<RenderObject>();
 
 			this.x = _camera_rect.x;
 			this.y = _camera_rect.y;
@@ -45,13 +47,27 @@ package framework
 			_qtree.init(6, _camera_rect.width, _camera_rect.height)
 		}
 
+		public function add_object(robj:RenderObject):void
+		{
+			_render_list.push(robj);
+		}
+
 		public function render():void
 		{
+			_qtree.render(_render_list);
+
 			_buffer.lock();
 
 			for each(var node:TreeNode in _qtree.get_nodes(_qtree.depth))
 			{
-				_buffer.setVector(node.rect, node.pix_vector);
+				node.render();
+
+				if (node.pix_vector)
+				{
+					_buffer.setVector(node.rect, node.pix_vector);
+				}
+
+				node.clear_buffer();
 			}
 
 			_buffer.unlock();

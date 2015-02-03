@@ -35,9 +35,12 @@ package framework.quadtree
 			_root = new TreeNode(0, new Rectangle(0, 0, q_width, q_height));
 		}
 
-		public function add_object(robj:RenderObject):void
+		public function render(list:Vector.<RenderObject>):void
 		{
-			_root.add_object(robj);			
+			for each(var robj:RenderObject in list)
+			{
+				_root.add_object(robj);			
+			}
 		}
 
 		public function push_node(q_depth:int, node:TreeNode):void
