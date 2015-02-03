@@ -16,12 +16,16 @@ package framework.quadtree
 		private var 
 			_depth     : int,
 			_root      : TreeNode,
+			_width     : int,
+			_height    : int,
 			_node_arr  : Array,
 			_node_bmp  : Bitmap;
 
 		public function init(q_depth:int=7, q_width:int=4096, q_height:int=4096):void
 		{
 			_depth = q_depth;
+			_width = q_width;
+			_height = q_height;
 			_node_arr = new Array(q_depth);
 
 			for (var index:int = 0; index <= q_depth; ++index)
@@ -51,6 +55,16 @@ package framework.quadtree
 		{
 			return _root;
 		}
+
+		public function get width():int
+		{
+			return _width;
+		}
+
+		public function get height():int
+		{
+			return _height;
+		}
 		
 		public function get node_bmp():Bitmap
 		{
@@ -58,13 +72,13 @@ package framework.quadtree
 			{
 				var 
 					sp     : Sprite = new Sprite(),
-					width  : int = GameEngine.inst.camera.rect.width >> _depth,
-					height : int = GameEngine.inst.camera.rect.height >> _depth,
-					bmd    : BitmapData = new BitmapData(width, height, false, 0xffffff);
+					s_w    : int = _width >> _depth,
+					s_h    : int = _height >> _depth,
+					bmd    : BitmapData = new BitmapData(s_w, s_h, false, 0xffffff);
 
 				sp.graphics.lineStyle(1, 0x0000ff);
 				sp.graphics.beginFill(0x0000ff, .2);
-				sp.graphics.drawRect(0, 0, width, height);
+				sp.graphics.drawRect(0, 0, s_w, s_h);
 				sp.graphics.endFill();
 
 				bmd.draw(sp);

@@ -31,6 +31,19 @@ package framework
 
 			_baseTime = t;
 		}
+
+		static public function deOverdraw(so:Vector.<uint>, tg:Vector.<uint>):Vector.<uint>
+		{
+			var func : Function = function(item:uint, index:int, vector:Vector.<uint>):void
+			{
+				if (item != tg[index])
+				{
+					item = tg[index];
+				}
+			}
+
+			return so.map(func, null);
+		}
 		
 		static public function formate(str:String, ...args):String
 		{

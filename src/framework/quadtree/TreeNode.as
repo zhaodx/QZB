@@ -8,11 +8,12 @@ package framework.quadtree
 	public class TreeNode
 	{
 		private var 
-			_depth    : int,
-			_root     : TreeNode,
-			_parent   : TreeNode,
-			_rect     : Rectangle,
-			_children : Vector.<TreeNode>;
+			_depth      : int,
+			_root       : TreeNode,
+			_parent     : TreeNode,
+			_rect       : Rectangle,
+			_children   : Vector.<TreeNode>,
+			_pix_vector : Vector.<uint>;
 
 		public function TreeNode(nd_depth:int, nd_rect:Rectangle, nd_root:TreeNode=null, nd_parent:TreeNode=null)
 		{
@@ -26,6 +27,10 @@ package framework.quadtree
 			if (hasChildren) 
 			{
 				initChildren();
+			}else
+			{
+				var vrect : Rectangle = new Rectangle(0, 0, _rect.width, _rect.height);
+				_pix_vector = GameEngine.inst.qtree.node_bmp.bitmapData.getVector(vrect);
 			}
 		}
 
@@ -76,6 +81,11 @@ package framework.quadtree
 		public function get hasChildren():Boolean
 		{
 			return _depth < GameEngine.inst.qtree.depth;
+		}
+
+		public function get pix_vector():Vector.<uint>
+		{
+			return _pix_vector;
 		}
 	}
 }

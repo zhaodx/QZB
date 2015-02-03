@@ -33,7 +33,7 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 
-			stage.frameRate = 30;
+			stage.frameRate = 60;
 			stage.stageFocusRect = false;
 			stage.showDefaultContextMenu = false;
 			stage.scaleMode = StageScaleMode.NO_SCALE;

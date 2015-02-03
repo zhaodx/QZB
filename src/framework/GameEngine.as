@@ -80,6 +80,8 @@ package framework
 
 		private function onUpdate(event:Event):void
 		{
+			//var st : Number = Util.millstamp;
+
 			dispatchEvent(new EngineEvent(EngineEvent.UPDATE_EVENT, Util.millstamp));
 
 			if (Util.secondstamp > _second)
@@ -90,6 +92,8 @@ package framework
 			}
 
 			_camera.render();
+
+			//Debug.log("Engine render time: " + (Util.millstamp - st));
 		}
 
 		private function onResize(event:Event):void
