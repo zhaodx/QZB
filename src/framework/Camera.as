@@ -51,7 +51,6 @@ package framework
 
 			for each(var node:TreeNode in _qtree.get_nodes(_qtree.depth))
 			{
-				//_buffer.setVector(node.rect, Util.deOverdraw(_buffer.getVector(node.rect), node.pix_vector));
 				_buffer.setVector(node.rect, node.pix_vector);
 			}
 
