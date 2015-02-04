@@ -76,12 +76,14 @@ package framework.zbuffer
 					_render_rect = _render_robj.rect;
 				}
 
-				if (_render_rect.equals(_rect))
+				if (_render_rect.containsRect(_rect) || _render_rect.equals(_rect))
 				{
+					_render_rect = null;
 					return index - 1;
 				}
 			}
 
+			_render_rect = null;
 			return _size - 1;
 		}
 

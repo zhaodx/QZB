@@ -61,37 +61,33 @@ package
 
 		private function draw_object():void
 		{
-			//GameEngine.inst.camera.bitmapData.draw(new Bitmap(tesdbmd(16, 8)));
+			for (var i:int=0; i<50; ++i)
+			{
+			  var robj : RenderObject = new RenderObject(tesdbmd(100, 50, 0x0000ff));	
+			  
+			  robj.rect.x = 100 + (int)(Math.random() * 1000);
+			  robj.rect.y = 50 + (int)(Math.random() * 500);
 
-			//for (var i:int=0; i<2; ++i)
-			//{
-				var robj : RenderObject = new RenderObject(tesdbmd(100, 50, 0x0000ff));	
-				
-				//robj.rect.x = 100 + (int)(Math.random() * 1000);
-				//robj.rect.y = 50 + (int)(Math.random() * 500);
-				robj.rect.x = 110;
-				robj.rect.y = 60;
+			  GameEngine.inst.qtree.add_object(robj);	
+			}
 
-				GameEngine.inst.qtree.add_object(robj);	
+			var robj1 : RenderObject = new RenderObject(tesdbmd(100, 50, 0xff0000));	
+			
+			robj1.rect.x = 120;
+			robj1.rect.y = 80;
 
-				var robj1 : RenderObject = new RenderObject(tesdbmd(100, 50, 0xff0000));	
-				
-				robj1.rect.x = 120;
-				robj1.rect.y = 80;
-
-				GameEngine.inst.qtree.add_object(robj1);	
-			//}
+			GameEngine.inst.qtree.add_object(robj1);	
 		}
 
 		private function tesdbmd(w:int, h:int, color:uint):BitmapData
 		{
 			var 
 				sp     : Sprite = new Sprite(),
-				bmd    : BitmapData = new BitmapData(w, h, false, 0);
+				bmd    : BitmapData = new BitmapData(w, h, false, 0xffffff);
 
-			//sp.graphics.lineStyle(1, 0x0000ff);
-			sp.graphics.beginFill(color, 1);
-			sp.graphics.drawRect(0, 0, w, h);
+			sp.graphics.lineStyle(1, color);
+			sp.graphics.beginFill(color, .2);
+			sp.graphics.drawRect(0, 0, w - 1, h - 1);
 			sp.graphics.endFill();
 
 			bmd.draw(sp);
