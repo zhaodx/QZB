@@ -13,9 +13,7 @@ package framework
 	public class GameEngine extends EventDispatcher
 	{
 		private var 
-			_pm           : PoolManager,
 			_stg          : Stage,
-			_qtree        : QuadTree,
 			_second       : int,
 			_camera       : Camera,
 			_mouse_pos    : Point,
@@ -50,9 +48,6 @@ package framework
 			_world_width = width;
 			_world_height = height;
 
-			_pm = new PoolManager();
-
-			add_quadtree();
 			add_camera();
 			add_event();
 		}
@@ -67,14 +62,9 @@ package framework
 			_stg.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, true);
 		}
 
-		private function add_quadtree():void
-		{
-			_qtree = new QuadTree();
-		}
-
 		private function add_camera():void
 		{
-			_camera = new Camera(100, true);
+			_camera = new Camera();
 			_stg.addChild(_camera);
 		}
 
@@ -99,7 +89,7 @@ package framework
 		private function onResize(event:Event):void
 		{
 			//Debug.log('onResize: ' + stage_width + ',  ' + stage_height);
-			//_camera.resize(stage_width, stage_height);
+			_camera.resize(stage_width, stage_height);
 		}
 		
 		private function onMouseDown(event:MouseEvent):void
@@ -119,7 +109,7 @@ package framework
 			//Debug.log('onMouseMove: ' + event.stageX + ',  ' + event.stageY);
 			if (_mouse_pos)
 			{
-				//_camera.move(event.stageX - _mouse_pos.x, event.stageY - _mouse_pos.y);
+				_camera.move(event.stageX - _mouse_pos.x, event.stageY - _mouse_pos.y);
 
 				_mouse_pos.x = event.stageX;
 				_mouse_pos.y = event.stageY;
@@ -129,7 +119,7 @@ package framework
 		private function onMouseWheel(event:MouseEvent):void
 		{
 			//Debug.log('onMouseWheel: ' + event.delta);
-			//(event.delta < 0) ? _camera.zoom_in() : _camera.zoom_out();
+			(event.delta < 0) ? _camera.zoom_in() : _camera.zoom_out();
 		}
 
 		public function get stage():Stage
@@ -147,14 +137,9 @@ package framework
 			return _stg.stageHeight;
 		}
 
-		public function get pool():PoolManager
-		{
-			return _pm;
-		}
-
 		public function get qtree():QuadTree
 		{
-			return _qtree;
+			return _camera.qtree;
 		}
 
 		public function get camera():Camera
@@ -174,12 +159,6 @@ package framework
 
 		public function dispose():void
 		{
-			if (_pm)
-			{
-				_pm.dispose();
-				_pm = null;
-			}
-
 			_stg = null;
 		}
 	}

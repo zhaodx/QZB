@@ -8,9 +8,9 @@ package framework
 	public class RenderObject
 	{
 		private var 
-			_bmd   : BitmapData,
-			_rect  : Rectangle,
-			_alpha : Number;
+			_bmd       : BitmapData,
+			_rect      : Rectangle,
+			_alpha     : Number;
 
 		public function RenderObject(bmd:BitmapData, alp:Number=1)
 		{

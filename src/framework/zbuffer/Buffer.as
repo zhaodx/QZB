@@ -1,10 +1,15 @@
 package framework.zbuffer
 {
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import framework.Debug;
+	import framework.Camera;
 	import framework.RenderObject;
+
+	import framework.Debug;
 
 	public class Buffer
 	{
@@ -12,73 +17,105 @@ package framework.zbuffer
 			_size         : int,
 			_rect         : Rectangle,
 			_objects      : Vector.<RenderObject>,
-			_pix_vector   : Vector.<uint>,
 			_render_bmd   : BitmapData,
+			_render_pos   : Point,
+			_render_robj  : RenderObject,
 			_render_rect  : Rectangle;
 
 		public function Buffer(b_rect:Rectangle)
 		{
 			_rect = b_rect;
-			_objects = new Vector.<RenderObject>(20, true);
+			_objects = new Vector.<RenderObject>(10, true);
 			_render_bmd = new BitmapData(_rect.width, _rect.height, true, 0);
 		}
 
 		public function add_object(robj:RenderObject):void
 		{
-			if (_size > _objects.length)
+			if (_size == _objects.length)
 			{
-				Debug.logError('out of size');
-				return;
+				_size = 0;
 			}
 			
-			_objects[++_size] = robj;
+			_objects[_size++] = robj;
 		}
 
-		public function render():void
+		public function remove_object(robj:RenderObject):void
 		{
-			_render_bmd.lock();
+			var index : int = _objects.indexOf(robj);
 
-			for each(var robj:RenderObject in _objects)
+			if (index != -1 && index < _size)
 			{
-				if (!robj)
+				--_size;
+				_objects[index] = null;
+
+				for (var i:int = index; i < _size; ++i)
 				{
-					continue;
+					_objects[i] = _objects[i + 1];
 				}
 
+				_objects[_size] = null;
+			}
+		}
+
+		private function depth_sort():void
+		{
+
+		}
+
+		private function get z_index():int
+		{
+			for (var index:int = _size; index > 0 ; --index)
+			{
+				_render_robj = _objects[index - 1];
+
+				if (_render_rect)
+				{
+					_render_rect = _render_rect.union(_render_robj.rect);	
+				}else
+				{
+					_render_rect = _render_robj.rect;
+				}
+
+				if (_render_rect.equals(_rect))
+				{
+					return index - 1;
+				}
+			}
+
+			return _size - 1;
+		}
+
+		public function render(camera:Camera):void
+		{
+			depth_sort();
+
+			_render_bmd.lock();
+
+			for (var index:int = z_index; index < _size ; ++index)
+			{
+				//trace(index, _size);
+
+				_render_robj = _objects[index];
+				_render_rect = _rect.intersection(_render_robj.rect);
+				_render_pos = new Point(_render_rect.x - _rect.x, _render_rect.y - _rect.y);
+
+				_render_rect.x = _render_rect.x - _render_robj.rect.x;
+				_render_rect.y = _render_rect.y - _render_robj.rect.y;
+
+				//trace(_render_rect, _render_pos);
+
 				_render_bmd.copyPixels(
-						robj.bitmapData, 
-						_rect.intersection(robj.rect),
-						null, null, null, true);
-
-				//if (_render_rect)
-				//{
-				//	_render_rect = _render_rect.union(robj.rect);	
-				//}else
-				//{
-				//	_render_rect = robj.rect;
-				//}
-
-				//if (_render_rect.equals(_rect))
-				//{
-				//	return;
-				//}
+						_render_robj.bitmapData, 
+						_render_rect,
+						_render_pos, 
+						null, null, true);
 			}
 
 			_render_bmd.unlock();
-			_pix_vector = _render_bmd.getVector(_rect);
-		}
 
-		public function clear():void
-		{
-			_size = 0;
-			_pix_vector = null;
-			_render_rect = null;
-			_objects = new Vector.<RenderObject>(20, true);
-		}
-
-		public function get pix_vector():Vector.<uint>
-		{
-			return _pix_vector;
+			camera.bitmapData.setVector(
+					new Rectangle(_rect.x - camera.rect.x, _rect.y - camera.rect.y, _rect.width, _rect.height), 
+					_render_bmd.getVector(new Rectangle(0, 0, _rect.width, _rect.height)));
 		}
 	}
 }
