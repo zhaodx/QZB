@@ -14,44 +14,34 @@ package framework.zbuffer
 	public class Buffer
 	{
 		private var 
-			_size         : int,
-			_rect         : Rectangle,
-			_objects      : Vector.<RenderObject>,
-			_render_bmd   : BitmapData;
+			_rect        : Rectangle,
+			_objects     : Vector.<RenderObject>,
+			_render_pos  : Point,
+			_render_obj  : RenderObject,
+			_render_bmd  : BitmapData,
+			_render_rect : Rectangle,
+			_render_list : Vector.<uint>;
 
 		public function Buffer(b_rect:Rectangle)
 		{
 			_rect = b_rect;
-			_objects = new Vector.<RenderObject>(500, true);
+			_render_pos = new Point(0, 0);
+			_objects = new Vector.<RenderObject>();
 			_render_bmd = new BitmapData(_rect.width, _rect.height, true, 0);
 		}
 
 		public function add_object(robj:RenderObject):void
 		{
-			if (_size == _objects.length)
-			{
-				Debug.logError('out of buffer');
-				_size = 0;
-			}
-			
-			_objects[_size++] = robj;
+			_objects.push(robj);	
 		}
 
 		public function remove_object(robj:RenderObject):void
 		{
 			var index : int = _objects.indexOf(robj);
 
-			if (index != -1 && index < _size)
+			if (index != -1)
 			{
-				--_size;
-				_objects[index] = null;
-
-				for (var i:int = index; i < _size; ++i)
-				{
-					_objects[i] = _objects[i + 1];
-				}
-
-				_objects[_size] = null;
+				_objects.splice(index, 1);
 			}
 		}
 
@@ -63,9 +53,7 @@ package framework.zbuffer
 		private function get render_list():Vector.<uint>
 		{
 			var 
-				robj         : RenderObject,
 				tmp_rect     : Rectangle,
-				old_rect     : Rectangle,
 				rect_area    : int,
 				inster_area  : int,
 				render_area  : int,
@@ -73,13 +61,12 @@ package framework.zbuffer
 				inster_rect  : Rectangle,
 				render_index : Vector.<uint>;
 
-			rect_area = _rect.width * _rect.height;
 			render_index = new Vector.<uint>();
 
-			for (var index:int = _size; index > 0 ; --index)
+			for (var index:int = _objects.length; index > 0 ; --index)
 			{
-				robj = _objects[index - 1];
-				inster_rect = _rect.intersection(robj.rect);
+				_render_obj = _objects[index - 1];
+				inster_rect = _rect.intersection(_render_obj.rect);
 				inster_area = inster_rect.width * inster_rect.height;
 
 				if (!render_rect)
@@ -91,34 +78,35 @@ package framework.zbuffer
 					continue;
 				}
 
-				//if (render_rect.containsRect(inster_rect) && render_area == render_rect.width * render_rect.height)
-				//{
-				//	continue;
-				//}
+				rect_area = render_rect.width * render_rect.height;
 
-				//if (render_rect.equals(inster_rect) && render_area == render_rect.width * render_rect.height)
-				//{
-				//	continue;
-				//}
+				if (render_rect.containsRect(inster_rect) 
+						&& render_area == rect_area)
+				{
+					continue;
+				}
 
-				//render_rect = render_rect.union(inster_rect);
-				//render_area += inster_area;
+				if (render_rect.equals(inster_rect) 
+						&& render_area == rect_area)
+				{
+					continue;
+				}
+
+				render_rect = render_rect.union(inster_rect);
+				render_area += inster_area;
 				render_index.push(index - 1);				
 
-				//if (render_rect.intersects(inster_rect))
-				//{
-				//	tmp_rect = render_rect.intersection(inster_rect);
-				//	render_area -= tmp_rect.width * tmp_rect.height;
-				//}
+				if (render_rect.intersects(inster_rect))
+				{
+					tmp_rect = render_rect.intersection(inster_rect);
+					render_area -= tmp_rect.width * tmp_rect.height;
+				}
 
-				//render_rect = render_rect.union(inster_rect);
-				//render_area += inster_area;
-				//render_index.push(index - 1);				
-
-				//if (render_rect.equals(_rect) && render_area == rect_area)
-				//{
-				//	return render_index.reverse();
-				//}
+				if (render_rect.equals(_rect) 
+						&& render_area == _rect.width * _rect.height)
+				{
+					return render_index.reverse();
+				}
 			}
 
 			return render_index.reverse();
@@ -126,38 +114,38 @@ package framework.zbuffer
 
 		public function render(camera:Camera):void
 		{
-			var 
-				robj         : RenderObject,
-				render_pos   : Point,
-				render_rect  : Rectangle;
-
 			depth_sort();
 
 			_render_bmd.lock();
+			_render_list = render_list;
 
-			//for each(var index:uint in render_list)
-			for (var index:int = 0; index < _size; ++index)
+			for each(var index:uint in _render_list)
 			{
-				robj = _objects[index];
-				render_rect = _rect.intersection(robj.rect);
-				render_pos = new Point(render_rect.x - _rect.x, render_rect.y - _rect.y);
+				//if (_render_list.length != _objects.length)
+				//{
+				//	trace(_render_list.length, _objects.length);
+				//}
 
-				render_rect.x = render_rect.x - robj.rect.x;
-				render_rect.y = render_rect.y - robj.rect.y;
+				_render_obj = _objects[index];
+				_render_rect = _rect.intersection(_render_obj.rect);
+				_render_pos.x = _render_rect.x - _rect.x;
+				_render_pos.y = _render_rect.y - _rect.y;
 
-				//trace(render_rect, render_pos);
+				_render_rect.x = _render_rect.x - _render_obj.rect.x;
+				_render_rect.y = _render_rect.y - _render_obj.rect.y;
 
 				_render_bmd.copyPixels(
-						robj.bitmapData, 
-						render_rect,
-						render_pos, 
+						_render_obj.bitmapData, 
+						_render_rect,
+						_render_pos, 
 						null, null, true);
 			}
 
 			_render_bmd.unlock();
 
+			//new Rectangle(_rect.x - camera.rect.x, _rect.y - camera.rect.y, _rect.width, _rect.height), 
 			camera.bitmapData.setVector(
-					new Rectangle(_rect.x - camera.rect.x, _rect.y - camera.rect.y, _rect.width, _rect.height), 
+					_rect,
 					_render_bmd.getVector(new Rectangle(0, 0, _rect.width, _rect.height)));
 		}
 	}

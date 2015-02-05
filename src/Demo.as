@@ -38,7 +38,7 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 
-			stage.frameRate = 60;
+			stage.frameRate = 30;
 			stage.stageFocusRect = false;
 			stage.showDefaultContextMenu = false;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -63,7 +63,7 @@ package
 		{
 			for (var i:int=0; i<500; ++i)
 			{
-			  var robj : RenderObject = new RenderObject(tesdbmd(100, 50, 0x0000ff));	
+			  var robj : RenderObject = new RenderObject(tesdbmd(64, 64, 0x0000ff));	
 			  
 			  robj.rect.x = (int)(Math.random() * 1400);
 			  robj.rect.y = (int)(Math.random() * 900);
@@ -71,10 +71,10 @@ package
 			  GameEngine.inst.qtree.add_object(robj);	
 			}
 
-			//var robj1 : RenderObject = new RenderObject(tesdbmd(100, 50, 0xff0000));	
+			//var robj1 : RenderObject = new RenderObject(tesdbmd(128, 128, 0xff0000));	
 			//
-			//robj1.rect.x = 120;
-			//robj1.rect.y = 80;
+			//robj1.rect.x = 0;
+			//robj1.rect.y = 0;
 
 			//GameEngine.inst.qtree.add_object(robj1);	
 		}

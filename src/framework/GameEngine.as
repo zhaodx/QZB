@@ -51,7 +51,7 @@ package framework
 			_world_width = width;
 			_world_height = height;
 
-			_qtree = new QuadTree(6, new Rectangle(0, 0, width, height));
+			_qtree = new QuadTree(5, new Rectangle(0, 0, width, height));
 
 			_camera = new Camera();
 			_stg.addChild(_camera);

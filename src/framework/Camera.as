@@ -31,7 +31,9 @@ package framework
 
 		public function render():void
 		{
+			bitmapData.lock();
 			_qtree.render(this);
+			bitmapData.unlock();
 		}
 
 		public function resize(swidth:int, sheight:int):void
@@ -45,8 +47,8 @@ package framework
 			this.x += offset_x;	
 			this.y += offset_y;	
 
-			//_camera_rect.x -= offset_x;
-			//_camera_rect.y -= offset_y;
+			_camera_rect.x -= offset_x;
+			_camera_rect.y -= offset_x;
 		}
 
 		public function zoom_in():void
