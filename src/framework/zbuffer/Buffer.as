@@ -19,6 +19,7 @@ package framework.zbuffer
 			_render_pos  : Point,
 			_render_obj  : RenderObject,
 			_render_bmd  : BitmapData,
+			_default_bmd : BitmapData,
 			_render_rect : Rectangle,
 			_render_list : Vector.<uint>;
 
@@ -27,6 +28,7 @@ package framework.zbuffer
 			_rect = b_rect;
 			_render_pos = new Point(0, 0);
 			_objects = new Vector.<RenderObject>();
+			_default_bmd = new BitmapData(_rect.width, _rect.height, true, 0);
 			_render_bmd = new BitmapData(_rect.width, _rect.height, true, 0);
 		}
 
@@ -109,9 +111,10 @@ package framework.zbuffer
 
 		public function render(camera:Camera):void
 		{
-			_render_bmd.lock();
 			_render_list = render_list;
 
+			_render_bmd.lock();
+			_render_bmd.setVector(_render_bmd.rect, _default_bmd.getVector(_default_bmd.rect));
 			for each(var index:uint in _render_list)
 			{
 				_render_obj = _objects[index];

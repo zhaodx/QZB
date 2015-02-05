@@ -98,7 +98,7 @@ package framework.quadtree
 		{
 			if (_need_render && camera.rect.intersects(_rect))
 			{
-				//_need_render = false;
+				_need_render = false;
 
 				if (hasChildren)
 				{
