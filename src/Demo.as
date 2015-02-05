@@ -54,29 +54,29 @@ package
 
 		private function test():void
 		{
-			draw_camera();
+			//draw_camera();
 
 			draw_object();
 		}
 
 		private function draw_object():void
 		{
-			for (var i:int=0; i<50; ++i)
+			for (var i:int=0; i<500; ++i)
 			{
 			  var robj : RenderObject = new RenderObject(tesdbmd(100, 50, 0x0000ff));	
 			  
-			  robj.rect.x = 100 + (int)(Math.random() * 1000);
-			  robj.rect.y = 50 + (int)(Math.random() * 500);
+			  robj.rect.x = (int)(Math.random() * 1400);
+			  robj.rect.y = (int)(Math.random() * 900);
 
 			  GameEngine.inst.qtree.add_object(robj);	
 			}
 
-			var robj1 : RenderObject = new RenderObject(tesdbmd(100, 50, 0xff0000));	
-			
-			robj1.rect.x = 120;
-			robj1.rect.y = 80;
+			//var robj1 : RenderObject = new RenderObject(tesdbmd(100, 50, 0xff0000));	
+			//
+			//robj1.rect.x = 120;
+			//robj1.rect.y = 80;
 
-			GameEngine.inst.qtree.add_object(robj1);	
+			//GameEngine.inst.qtree.add_object(robj1);	
 		}
 
 		private function tesdbmd(w:int, h:int, color:uint):BitmapData

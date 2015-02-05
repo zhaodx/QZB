@@ -19,14 +19,14 @@ package framework
 
 		public function Camera(bitmapData:BitmapData=null, pixelSnapping:String="auto", smoothing:Boolean=true)
 		{
-			_camera_rect = new Rectangle(100, 50, 1024, 512);
+			_camera_rect = new Rectangle(0, 0, 0, 0);
 
-			this.x = _camera_rect.x;
-			this.y = _camera_rect.y;
+			this.bitmapData = new BitmapData(
+				GameEngine.inst.world_width, 
+				GameEngine.inst.world_height, 
+				true, 0);
 
-			this.bitmapData = new BitmapData(_camera_rect.width, _camera_rect.height, true, 0);
-
-			_qtree = new QuadTree(6, _camera_rect);
+			_qtree = GameEngine.inst.qtree;
 		}
 
 		public function render():void
@@ -36,14 +36,14 @@ package framework
 
 		public function resize(swidth:int, sheight:int):void
 		{
-			//_camera_rect.width = swidth;
-			//_camera_rect.height = sheight;
+			_camera_rect.width = swidth;
+			_camera_rect.height = sheight;
 		}
 
 		public function move(offset_x:int, offset_y:int):void
 		{
-			//this.x += offset_x;	
-			//this.y += offset_y;	
+			this.x += offset_x;	
+			this.y += offset_y;	
 
 			//_camera_rect.x -= offset_x;
 			//_camera_rect.y -= offset_y;
@@ -90,11 +90,6 @@ package framework
 		public function get rect():Rectangle
 		{
 			return _camera_rect;
-		}
-
-		public function get qtree():QuadTree
-		{
-			return _qtree;
 		}
 	}
 }

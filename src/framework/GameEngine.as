@@ -4,7 +4,9 @@ package framework
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.EventDispatcher;
+
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
 	import framework.event.EngineEvent;
 	import framework.pool.PoolManager;
@@ -14,8 +16,9 @@ package framework
 	{
 		private var 
 			_stg          : Stage,
-			_second       : int,
+			_qtree        : QuadTree,
 			_camera       : Camera,
+			_second       : int,
 			_mouse_pos    : Point,
 			_world_width  : int,
 			_world_height : int;
@@ -48,7 +51,11 @@ package framework
 			_world_width = width;
 			_world_height = height;
 
-			add_camera();
+			_qtree = new QuadTree(6, new Rectangle(0, 0, width, height));
+
+			_camera = new Camera();
+			_stg.addChild(_camera);
+
 			add_event();
 		}
 
@@ -64,8 +71,6 @@ package framework
 
 		private function add_camera():void
 		{
-			_camera = new Camera();
-			_stg.addChild(_camera);
 		}
 
 		private function onUpdate(event:Event):void
@@ -137,14 +142,14 @@ package framework
 			return _stg.stageHeight;
 		}
 
-		public function get qtree():QuadTree
-		{
-			return _camera.qtree;
-		}
-
 		public function get camera():Camera
 		{
 			return _camera;
+		}
+
+		public function get qtree():QuadTree
+		{
+			return _qtree;
 		}
 
 		public function get world_width():int
