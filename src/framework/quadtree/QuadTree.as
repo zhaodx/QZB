@@ -32,6 +32,11 @@ package framework.quadtree
 			_root.remove_object(robj);
 		}
 
+		public function update_object(robj:RenderObject):void
+		{
+			_root.update_object(robj);
+		}
+
 		public function render(camera:Camera):void
 		{
 			_root.render(camera);

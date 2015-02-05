@@ -8,24 +8,26 @@ package framework
 	public class RenderObject
 	{
 		private var 
-			_fps       : int,
-			_w_x       : int,
-			_w_y       : int,
-			_bmd       : BitmapData,
-			_tick      : int,
-			_bmds      : Vector.<BitmapData>,
-			_rect      : Rectangle;
+			_tick        : uint,
+			_atlas       : BitmapData,
+			_world_rect  : Rectangle,
+			_atlas_rect  : Rectangle,
+			_frames_rect : Vector.<Rectangle>;
 
-		public function RenderObject(bmd:BitmapData, r_fps:int=20)
+		public function RenderObject(r_atlas:BitmapData, fs_rect:Vector.<Rectangle>, w_rect:Rectangle)
 		{
-			_fps = r_fps;
-			_bmd = bmd;
-			_rect = new Rectangle(_w_x, _w_y, _bmd.width, _bmd.height);
+			_atlas = r_atlas;
+			_world_rect = w_rect;
+			_frames_rect = fs_rect;
+			_atlas_rect = _frames_rect[0];
 		}
 
 		public function play():void
 		{
-			GameEngine.inst.addEventListener(EngineEvent.UPDATE_EVENT, update);	
+			if (_frames_rect.length > 1)
+			{
+				GameEngine.inst.addEventListener(EngineEvent.UPDATE_EVENT, update);	
+			}
 		}
 
 		public function stop():void
@@ -35,44 +37,24 @@ package framework
 
 		private function update(event:EngineEvent):void
 		{
-			if (++_tick % 2 == 0)
-			{
-				GameEngine.inst.qtree.remove_object(this);
-				_bmd = _bmds[_tick % 8];
-				GameEngine.inst.qtree.add_object(this);
-			}
+			_atlas_rect = _frames_rect[_tick++ % _frames_rect.length];
+
+			GameEngine.inst.qtree.update_object(this);
 		}
 
-		public function get bitmapData():BitmapData
+		public function get atlas():BitmapData
 		{
-			return _bmd;
+			return _atlas;
 		}
 
-		public function get rect():Rectangle
+		public function get atlas_rect():Rectangle
 		{
-			return _rect;
+			return _atlas_rect;
 		}
 
-		public function get fps():int
+		public function get world_rect():Rectangle
 		{
-			return _fps;
-		}
-
-		public function set world_x(value:int):void
-		{
-			_w_x = value;
-			_rect.x = value;
-		}
-
-		public function set world_y(value:int):void
-		{
-			_w_y = value;
-			_rect.y = value;
-		}
-
-		public function set bmds(value:Vector.<BitmapData>):void
-		{
-			_bmds = value;
+			return _world_rect;
 		}
 	}
 }

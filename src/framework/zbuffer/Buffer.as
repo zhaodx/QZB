@@ -14,22 +14,22 @@ package framework.zbuffer
 	public class Buffer
 	{
 		private var 
-			_rect        : Rectangle,
 			_objects     : Vector.<RenderObject>,
+			_default     : Vector.<uint>,
+			_world_rect  : Rectangle,
 			_render_pos  : Point,
 			_render_obj  : RenderObject,
-			_render_bmd  : BitmapData,
-			_default_bmd : BitmapData,
 			_render_rect : Rectangle,
 			_render_list : Vector.<uint>;
 
-		public function Buffer(b_rect:Rectangle)
+		public function Buffer(w_rect:Rectangle)
 		{
-			_rect = b_rect;
+			_world_rect = w_rect;
 			_render_pos = new Point(0, 0);
 			_objects = new Vector.<RenderObject>();
-			_default_bmd = new BitmapData(_rect.width, _rect.height, true, 0);
-			_render_bmd = new BitmapData(_rect.width, _rect.height, true, 0);
+
+			var bmd:BitmapData = new BitmapData(_world_rect.width, _world_rect.height, true, 0);
+			_default = bmd.getVector(bmd.rect);
 		}
 
 		public function add_object(robj:RenderObject):void
@@ -63,7 +63,7 @@ package framework.zbuffer
 			for (var index:int = _objects.length; index > 0 ; --index)
 			{
 				_render_obj = _objects[index - 1];
-				inster_rect = _rect.intersection(_render_obj.rect);
+				inster_rect = _world_rect.intersection(_render_obj.world_rect);
 				inster_area = inster_rect.width * inster_rect.height;
 
 				if (!render_rect)
@@ -99,8 +99,8 @@ package framework.zbuffer
 					render_area -= tmp_rect.width * tmp_rect.height;
 				}
 
-				if (render_rect.equals(_rect) 
-						&& render_area == _rect.width * _rect.height)
+				if (render_rect.equals(_world_rect) 
+						&& render_area == _world_rect.width * _world_rect.height)
 				{
 					return render_index.reverse();
 				}
@@ -113,30 +113,28 @@ package framework.zbuffer
 		{
 			_render_list = render_list;
 
-			_render_bmd.lock();
-			_render_bmd.setVector(_render_bmd.rect, _default_bmd.getVector(_default_bmd.rect));
+			camera.bitmapData.setVector(_world_rect, _default);
+
 			for each(var index:uint in _render_list)
 			{
 				_render_obj = _objects[index];
-				_render_rect = _rect.intersection(_render_obj.rect);
-				_render_pos.x = _render_rect.x - _rect.x;
-				_render_pos.y = _render_rect.y - _rect.y;
+				_render_rect = _world_rect.intersection(_render_obj.world_rect);
+				_render_pos.x = _render_rect.x - _world_rect.x;
+				_render_pos.y = _render_rect.y - _world_rect.y;
 
-				_render_rect.x = _render_rect.x - _render_obj.rect.x;
-				_render_rect.y = _render_rect.y - _render_obj.rect.y;
+				_render_rect.x = _render_rect.x - _render_obj.world_rect.x;
+				_render_rect.y = _render_rect.y - _render_obj.world_rect.y;
 
-				_render_bmd.copyPixels(
-						_render_obj.bitmapData, 
+				_render_rect.x = _render_rect.x - _render_obj.atlas_rect.x;
+				_render_rect.y = _render_rect.y - _render_obj.atlas_rect.y;
+
+				camera.bitmapData.copyPixels(
+						_render_obj.atlas, 
 						_render_rect,
 						_render_pos, 
 						null, null, true);
+
 			}
-
-			_render_bmd.unlock();
-
-			camera.bitmapData.setVector(
-					_rect,
-					_render_bmd.getVector(new Rectangle(0, 0, _rect.width, _rect.height)));
 		}
 	}
 }

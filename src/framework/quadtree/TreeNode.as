@@ -58,7 +58,7 @@ package framework.quadtree
 
 		public function add_object(robj:RenderObject):void
 		{
-			if (_rect.intersects(robj.rect))
+			if (_rect.intersects(robj.world_rect))
 			{
 				_need_render = true;
 
@@ -77,7 +77,7 @@ package framework.quadtree
 
 		public function remove_object(robj:RenderObject):void
 		{
-			if (_rect.intersects(robj.rect))
+			if (_rect.intersects(robj.world_rect))
 			{
 				_need_render = true;
 
@@ -90,6 +90,22 @@ package framework.quadtree
 				}else
 				{
 					_zbuffer.remove_object(robj);
+				}
+			}
+		}
+
+		public function update_object(robj:RenderObject):void
+		{
+			if (_rect.intersects(robj.world_rect))
+			{
+				_need_render = true;
+
+				if (hasChildren)
+				{
+					for each(var node:TreeNode in _children)
+					{
+						node.update_object(robj);
+					}
 				}
 			}
 		}

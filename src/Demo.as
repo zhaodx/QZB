@@ -32,9 +32,6 @@ package
 
 	public class Demo extends Sprite
 	{
-		private var 
-			_test_bmds : Vector.<BitmapData>;
-
 		public function Demo()
 		{
 			if (stage)
@@ -67,8 +64,6 @@ package
 		private function test():void
 		{
 			//draw_camera();
-			//draw_object();
-			_test_bmds = new Vector.<BitmapData>();
 			
 			var loader:Loader = new Loader();
 			var loaderContext:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
@@ -77,61 +72,42 @@ package
 			{
 				var loadInfo:LoaderInfo = event.currentTarget as LoaderInfo;
 				var resBmd:BitmapData = (loadInfo.content as Bitmap).bitmapData;
-				var bound:Rectangle = new Rectangle(0, 0, resBmd.width >> 2, resBmd.height >> 2);
-				var tmpWidth:Number = bound.width;
-				var tmpHeight:Number = bound.height;
+				var rects:Vector.<Rectangle> = new Vector.<Rectangle>();
 
 				for (var i:int = 0; i < 8; i = i + 1)
 				{
+					var bound:Rectangle = new Rectangle(0, 0, resBmd.width >> 2, resBmd.height >> 2);
+
 					if (i < 4)
 					{
-						bound.x = tmpWidth * i;
+						bound.x = bound.width * i;
 						bound.y = 0;
 					}else
 					{
-						bound.x = tmpWidth * (i - 4);
-						bound.y = tmpHeight;
+						bound.x = bound.width * (i - 4);
+						bound.y = bound.height;
 					}
 
-					var bmd:BitmapData = new BitmapData(bound.width, bound.height, true, 0); 
-					bmd.copyPixels(resBmd, bound, new Point(), null, null, false);
-					_test_bmds.push(bmd);
+					rects.push(bound);
 				}
 
-				loader.unload();
-				loader = null;
-
-				draw_object()
+				draw_object(resBmd, rects);
 			});
 		}
 
-		private function draw_object():void
+		private function draw_object(atlas:BitmapData, rects:Vector.<Rectangle>):void
 		{
-			for (var i:int=0; i<200; ++i)
+			for (var i:int=0; i<1; ++i)
 			{
-			  	var robj : RenderObject = new RenderObject(_test_bmds[0]);	
+				var x:int = 100;//Math.random() * 1200;
+				var y:int = 100;//Math.random() * 800;
+				var w_rect : Rectangle = new Rectangle(x, y, rects[0].width, rects[0].height);
+			  	var robj : RenderObject = new RenderObject(atlas, rects, w_rect);	
 
-			  	robj.bmds = _test_bmds;
-			  	robj.rect.x = (int)(Math.random() * 1200);
-			  	robj.rect.y = (int)(Math.random() * 800);
+				GameEngine.inst.qtree.add_object(robj);
 
-				//GameEngine.inst.qtree.add_object(robj);
 			  	robj.play();
 			}
-
-			//var robj : RenderObject = new RenderObject(tesdbmd(64, 64, 0x0000ff));	
-			//
-			//robj.rect.x = (int)(Math.random() * 1400);
-			//robj.rect.y = (int)(Math.random() * 900);
-
-			//GameEngine.inst.qtree.add_object(robj);	
-
-			//var robj1 : RenderObject = new RenderObject(tesdbmd(128, 128, 0xff0000));	
-			//
-			//robj1.rect.x = 0;
-			//robj1.rect.y = 0;
-
-			//GameEngine.inst.qtree.add_object(robj1);	
 		}
 
 		private function tesdbmd(w:int, h:int, color:uint):BitmapData
