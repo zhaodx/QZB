@@ -41,7 +41,7 @@ package framework
 			{
 				_stg = stg;
 
-				Debug.log('OK, FUNPLUS');
+				Debug.log('OK, QZB ENGINE.');
 			}else
 			{
 				Debug.logError('stage is null');

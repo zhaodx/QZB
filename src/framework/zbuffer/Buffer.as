@@ -45,11 +45,6 @@ package framework.zbuffer
 			}
 		}
 
-		private function depth_sort():void
-		{
-
-		}
-
 		private function get render_list():Vector.<uint>
 		{
 			var 
@@ -114,18 +109,11 @@ package framework.zbuffer
 
 		public function render(camera:Camera):void
 		{
-			depth_sort();
-
 			_render_bmd.lock();
 			_render_list = render_list;
 
 			for each(var index:uint in _render_list)
 			{
-				//if (_render_list.length != _objects.length)
-				//{
-				//	trace(_render_list.length, _objects.length);
-				//}
-
 				_render_obj = _objects[index];
 				_render_rect = _rect.intersection(_render_obj.rect);
 				_render_pos.x = _render_rect.x - _rect.x;
@@ -143,7 +131,6 @@ package framework.zbuffer
 
 			_render_bmd.unlock();
 
-			//new Rectangle(_rect.x - camera.rect.x, _rect.y - camera.rect.y, _rect.width, _rect.height), 
 			camera.bitmapData.setVector(
 					_rect,
 					_render_bmd.getVector(new Rectangle(0, 0, _rect.width, _rect.height)));
