@@ -97,10 +97,10 @@ package
 
 		private function draw_object(atlas:BitmapData, rects:Vector.<Rectangle>):void
 		{
-			for (var i:int=0; i<1000; ++i)
+			for (var i:int=0; i<500; ++i)
 			{
-				var x:int = Math.random() * 1200;
-				var y:int = Math.random() * 800;
+				var x:int = Math.random() * 2000;
+				var y:int = Math.random() * 1000;
 				var w_rect : Rectangle = new Rectangle(x, y, rects[0].width, rects[0].height);
 			  	var robj : RenderObject = new RenderObject(atlas, rects, w_rect);	
 

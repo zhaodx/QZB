@@ -41,10 +41,7 @@ package framework.quadtree
 
 			for each(var node:TreeNode in _node_list)
 			{
-				if (node.rect.intersects(camera.rect))	
-				{
-					node.render(camera);
-				}
+				node.render(camera);
 			}
 
 			camera.bitmapData.unlock();

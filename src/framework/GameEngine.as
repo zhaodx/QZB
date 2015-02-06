@@ -40,8 +40,6 @@ package framework
 			if (stg)
 			{
 				_stg = stg;
-
-				Debug.log('OK, QZB ENGINE.');
 			}else
 			{
 				Debug.logError('stage is null');
@@ -52,7 +50,7 @@ package framework
 			_world_height = height;
 
 			_qtree = new QuadTree();
-			_qtree.init(1, new Rectangle(0, 0, width, height));
+			_qtree.init(5, new Rectangle(0, 0, 2048, 1024));
 
 			_camera = new Camera();
 			_stg.addChild(_camera);
