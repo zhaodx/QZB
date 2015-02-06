@@ -14,7 +14,7 @@ package framework
 	{
 		private var 
 			_depth       : int,
-			_qtree       : QuadTree,
+			_default     : Vector.<uint>,
 			_camera_rect : Rectangle;
 
 		public function Camera(bitmapData:BitmapData=null, pixelSnapping:String="auto", smoothing:Boolean=true)
@@ -25,21 +25,18 @@ package framework
 				GameEngine.inst.world_width, 
 				GameEngine.inst.world_height, 
 				true, 0);
-
-			_qtree = GameEngine.inst.qtree;
-		}
-
-		public function render():void
-		{
-			bitmapData.lock();
-			_qtree.render(this);
-			bitmapData.unlock();
 		}
 
 		public function resize(swidth:int, sheight:int):void
 		{
 			_camera_rect.width = swidth;
 			_camera_rect.height = sheight;
+
+			var bmd:BitmapData = new BitmapData(swidth, sheight, true, 0);
+			_default = bmd.getVector(bmd.rect);
+
+			bmd.dispose();
+			bmd = null;
 		}
 
 		public function move(offset_x:int, offset_y:int):void
@@ -92,6 +89,11 @@ package framework
 		public function get rect():Rectangle
 		{
 			return _camera_rect;
+		}
+
+		public function get defaultVector():Vector.<uint>
+		{
+			return _default;
 		}
 	}
 }

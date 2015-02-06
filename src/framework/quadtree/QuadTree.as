@@ -14,11 +14,12 @@ package framework.quadtree
 		private var 
 			_depth     : int,
 			_root      : TreeNode,
-			_node_bmp  : Bitmap;
+			_node_list : Vector.<TreeNode>;
 
-		public function QuadTree(q_depth:int, q_rect:Rectangle):void
+		public function init(q_depth:int, q_rect:Rectangle):void
 		{
 			_depth = q_depth;
+			_node_list = new Vector.<TreeNode>();
 			_root = new TreeNode(0, _depth, q_rect);
 		}
 
@@ -26,20 +27,27 @@ package framework.quadtree
 		{
 			_root.add_object(robj);
 		}
-
-		public function remove_object(robj:RenderObject):void
+		
+		public function add_node(node:TreeNode):void
 		{
-			_root.remove_object(robj);
-		}
-
-		public function update_object(robj:RenderObject):void
-		{
-			_root.update_object(robj);
+			_node_list.push(node);
 		}
 
 		public function render(camera:Camera):void
 		{
-			_root.render(camera);
+			camera.bitmapData.lock();
+
+			camera.bitmapData.setVector(camera.rect, camera.defaultVector);
+
+			for each(var node:TreeNode in _node_list)
+			{
+				if (node.rect.intersects(camera.rect))	
+				{
+					node.render(camera);
+				}
+			}
+
+			camera.bitmapData.unlock();
 		}
 
 		public function get depth():int

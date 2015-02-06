@@ -51,7 +51,8 @@ package framework
 			_world_width = width;
 			_world_height = height;
 
-			_qtree = new QuadTree(5, new Rectangle(0, 0, width, height));
+			_qtree = new QuadTree();
+			_qtree.init(1, new Rectangle(0, 0, width, height));
 
 			_camera = new Camera();
 			_stg.addChild(_camera);
@@ -69,10 +70,6 @@ package framework
 			_stg.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel, false, 0, true);
 		}
 
-		private function add_camera():void
-		{
-		}
-
 		private function onUpdate(event:Event):void
 		{
 			//var st : Number = Util.millstamp;
@@ -86,7 +83,7 @@ package framework
 				dispatchEvent(new EngineEvent(EngineEvent.SECOND_EVENT, Util.secondstamp));
 			}
 
-			_camera.render();
+			_qtree.render(_camera);
 
 			//Debug.log("Engine render time: " + (Util.millstamp - st));
 		}

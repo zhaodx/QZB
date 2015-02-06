@@ -38,8 +38,6 @@ package framework
 		private function update(event:EngineEvent):void
 		{
 			_atlas_rect = _frames_rect[_tick++ % _frames_rect.length];
-
-			GameEngine.inst.qtree.update_object(this);
 		}
 
 		public function get atlas():BitmapData

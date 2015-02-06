@@ -6,19 +6,22 @@ package framework.quadtree
 	import framework.RenderObject;
 	import framework.zbuffer.Buffer;
 
+	import framework.GameEngine;
+
 	import framework.Debug;
 
 	public class TreeNode
 	{
 		private var 
-			_root        : TreeNode,
-			_rect        : Rectangle,
-			_depth       : int,
-			_parent      : TreeNode,
-			_zbuffer     : Buffer,
-			_children    : Vector.<TreeNode>,
-			_depth_max   : int,
-			_need_render : Boolean;
+			_root         : TreeNode,
+			_rect         : Rectangle,
+			_depth        : int,
+			_parent       : TreeNode,
+			_zbuffer      : Buffer,
+			_children     : Vector.<TreeNode>,
+			_depth_max    : int,
+			_need_render  : Boolean,
+			_has_children : Boolean;
 
 		public function TreeNode(nd_depth:int, depth_max:int, nd_rect:Rectangle, nd_root:TreeNode=null, nd_parent:TreeNode=null)
 		{
@@ -27,6 +30,7 @@ package framework.quadtree
 			_depth_max = depth_max;
 			_root = (nd_root) ? nd_root : this;
 			_parent = (nd_parent) ? nd_parent : this;
+			_has_children = _depth < _depth_max;
 
 			if (hasChildren) 
 			{
@@ -34,6 +38,7 @@ package framework.quadtree
 			}else
 			{
 				_zbuffer = new Buffer(_rect);
+				GameEngine.inst.qtree.add_node(this);
 			}
 		}
 
@@ -60,8 +65,6 @@ package framework.quadtree
 		{
 			if (_rect.intersects(robj.world_rect))
 			{
-				_need_render = true;
-
 				if (hasChildren)
 				{
 					for each(var node:TreeNode in _children)
@@ -77,55 +80,17 @@ package framework.quadtree
 
 		public function remove_object(robj:RenderObject):void
 		{
-			if (_rect.intersects(robj.world_rect))
+			if (_zbuffer)
 			{
-				_need_render = true;
-
-				if (hasChildren)
-				{
-					for each(var node:TreeNode in _children)
-					{
-						node.remove_object(robj);
-					}
-				}else
-				{
-					_zbuffer.remove_object(robj);
-				}
-			}
-		}
-
-		public function update_object(robj:RenderObject):void
-		{
-			if (_rect.intersects(robj.world_rect))
-			{
-				_need_render = true;
-
-				if (hasChildren)
-				{
-					for each(var node:TreeNode in _children)
-					{
-						node.update_object(robj);
-					}
-				}
+				_zbuffer.remove_object(robj);
 			}
 		}
 
 		public function render(camera:Camera):void
 		{
-			if (_need_render && camera.rect.intersects(_rect))
+			if (_zbuffer)
 			{
-				_need_render = false;
-
-				if (hasChildren)
-				{
-					for each(var node:TreeNode in _children)
-					{
-						node.render(camera);
-					}
-				}else
-				{
-					_zbuffer.render(camera);
-				}
+				_zbuffer.render(camera);
 			}
 		}
 
@@ -156,7 +121,7 @@ package framework.quadtree
 
 		public function get hasChildren():Boolean
 		{
-			return _depth < _depth_max;
+			return _has_children;
 		}
 	}
 }

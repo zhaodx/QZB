@@ -15,7 +15,7 @@ package framework.zbuffer
 	{
 		private var 
 			_objects     : Vector.<RenderObject>,
-			_default     : Vector.<uint>,
+			//_default     : Vector.<uint>,
 			_world_rect  : Rectangle,
 			_render_pos  : Point,
 			_render_obj  : RenderObject,
@@ -28,8 +28,8 @@ package framework.zbuffer
 			_render_pos = new Point(0, 0);
 			_objects = new Vector.<RenderObject>();
 
-			var bmd:BitmapData = new BitmapData(_world_rect.width, _world_rect.height, true, 0);
-			_default = bmd.getVector(bmd.rect);
+			//var bmd:BitmapData = new BitmapData(_world_rect.width, _world_rect.height, true, 0);
+			//_default = bmd.getVector(bmd.rect);
 		}
 
 		public function add_object(robj:RenderObject):void
@@ -63,8 +63,15 @@ package framework.zbuffer
 			for (var index:int = _objects.length; index > 0 ; --index)
 			{
 				_render_obj = _objects[index - 1];
-				inster_rect = _world_rect.intersection(_render_obj.world_rect);
-				inster_area = inster_rect.width * inster_rect.height;
+
+				if (_world_rect.intersects(_render_obj.world_rect))
+				{
+					inster_rect = _world_rect.intersection(_render_obj.world_rect);
+					inster_area = inster_rect.width * inster_rect.height;
+				}else
+				{
+					continue;
+				}
 
 				if (!render_rect)
 				{
@@ -113,27 +120,22 @@ package framework.zbuffer
 		{
 			_render_list = render_list;
 
-			camera.bitmapData.setVector(_world_rect, _default);
+			//camera.bitmapData.setVector(_world_rect, _default);
 
+			//for (var index:int = 0; index < _objects.length; ++index)
 			for each(var index:uint in _render_list)
 			{
 				_render_obj = _objects[index];
 				_render_rect = _world_rect.intersection(_render_obj.world_rect);
-				_render_pos.x = _render_rect.x - _world_rect.x;
-				_render_pos.y = _render_rect.y - _world_rect.y;
 
-				_render_rect.x = _render_rect.x - _render_obj.world_rect.x;
-				_render_rect.y = _render_rect.y - _render_obj.world_rect.y;
+				_render_pos.x = _render_rect.x;
+				_render_pos.y = _render_rect.y;
 
-				_render_rect.x = _render_rect.x - _render_obj.atlas_rect.x;
-				_render_rect.y = _render_rect.y - _render_obj.atlas_rect.y;
+				_render_rect.x = _render_rect.x - (_render_obj.world_rect.x - _render_obj.atlas_rect.x);
+				_render_rect.y = _render_rect.y - (_render_obj.world_rect.y - _render_obj.atlas_rect.y);
 
-				camera.bitmapData.copyPixels(
-						_render_obj.atlas, 
-						_render_rect,
-						_render_pos, 
-						null, null, true);
-
+				camera.bitmapData.copyPixels(_render_obj.atlas, 
+					_render_rect, _render_pos, null, null, true);
 			}
 		}
 	}
