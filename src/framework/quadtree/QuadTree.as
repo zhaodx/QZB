@@ -39,28 +39,28 @@ package framework.quadtree
 		{
 			var node : TreeNode;
 
-			if (_tick % 2 == 0)
-			{
-				for each(node in _node_list)
-				{
-					node.render_list();
-				}
+			//if (_tick % 2 == 0)
+			//{
+			//	for each(node in _node_list)
+			//	{
+			//		//node.render_list();
+			//	}
 
-				_tick = 0; 
-			}else
-			{
+			//	_tick = 0; 
+			//}else
+			//{
 				camera.bitmapData.lock();
 				camera.bitmapData.setVector(camera.rect, camera.defaultVector);
 
 				for each(node in _node_list)
 				{
-					node.render(camera);
+					//node.render(camera);
 				}
 
 				camera.bitmapData.unlock();
-			}
+			//}
 
-			_tick++;
+			//_tick++;
 		}
 
 		public function get depth():int
