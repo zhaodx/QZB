@@ -86,6 +86,14 @@ package framework.quadtree
 			}
 		}
 
+		public function render_list():void
+		{
+			if (_zbuffer)
+			{
+				_zbuffer.render_list();
+			}
+		}
+
 		public function render(camera:Camera):void
 		{
 			if (_zbuffer)

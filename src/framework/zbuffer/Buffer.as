@@ -20,13 +20,15 @@ package framework.zbuffer
 			_render_pos  : Point,
 			_render_obj  : RenderObject,
 			_render_rect : Rectangle,
-			_render_list : Vector.<uint>;
+			_render_list : Vector.<uint>,
+			_render_rects: Vector.<Rectangle>;
 
 		public function Buffer(w_rect:Rectangle)
 		{
 			_world_rect = w_rect;
 			_render_pos = new Point(0, 0);
 			_objects = new Vector.<RenderObject>();
+			_render_rects = new Vector.<Rectangle>();
 
 			//var bmd:BitmapData = new BitmapData(_world_rect.width, _world_rect.height, true, 0);
 			//_default = bmd.getVector(bmd.rect);
@@ -35,6 +37,7 @@ package framework.zbuffer
 		public function add_object(robj:RenderObject):void
 		{
 			_objects.push(robj);	
+			_render_rects.push(_world_rect.intersection(robj.world_rect))
 		}
 
 		public function remove_object(robj:RenderObject):void
@@ -47,7 +50,7 @@ package framework.zbuffer
 			}
 		}
 
-		private function get render_list():Vector.<uint>
+		public function render_list():void
 		{
 			var 
 				tmp_rect     : Rectangle,
@@ -63,15 +66,8 @@ package framework.zbuffer
 			for (var index:int = _objects.length; index > 0 ; --index)
 			{
 				_render_obj = _objects[index - 1];
-
-				if (_world_rect.intersects(_render_obj.world_rect))
-				{
-					inster_rect = _world_rect.intersection(_render_obj.world_rect);
-					inster_area = inster_rect.width * inster_rect.height;
-				}else
-				{
-					continue;
-				}
+				inster_rect = _render_rects[index - 1];
+				inster_area = inster_rect.width * inster_rect.height;
 
 				if (!render_rect)
 				{
@@ -109,16 +105,16 @@ package framework.zbuffer
 				if (render_rect.equals(_world_rect) 
 						&& render_area == _world_rect.width * _world_rect.height)
 				{
-					return render_index.reverse();
+					_render_list = render_index.reverse();
 				}
 			}
 
-			return render_index.reverse();
+			_render_list = render_index.reverse();
 		}
 
 		public function render(camera:Camera):void
 		{
-			_render_list = render_list;
+			//_render_list = render_list;
 
 			//camera.bitmapData.setVector(_world_rect, _default);
 
@@ -126,7 +122,7 @@ package framework.zbuffer
 			for each(var index:uint in _render_list)
 			{
 				_render_obj = _objects[index];
-				_render_rect = _world_rect.intersection(_render_obj.world_rect);
+				_render_rect = _render_rects[index];
 
 				_render_pos.x = _render_rect.x;
 				_render_pos.y = _render_rect.y;

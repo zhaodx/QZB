@@ -33,18 +33,34 @@ package framework.quadtree
 			_node_list.push(node);
 		}
 
+		private var _tick:uint;
+
 		public function render(camera:Camera):void
 		{
-			camera.bitmapData.lock();
+			var node : TreeNode;
 
-			camera.bitmapData.setVector(camera.rect, camera.defaultVector);
-
-			for each(var node:TreeNode in _node_list)
+			if (_tick % 2 == 0)
 			{
-				node.render(camera);
+				for each(node in _node_list)
+				{
+					node.render_list();
+				}
+
+				_tick = 0; 
+			}else
+			{
+				camera.bitmapData.lock();
+				camera.bitmapData.setVector(camera.rect, camera.defaultVector);
+
+				for each(node in _node_list)
+				{
+					node.render(camera);
+				}
+
+				camera.bitmapData.unlock();
 			}
 
-			camera.bitmapData.unlock();
+			_tick++;
 		}
 
 		public function get depth():int
