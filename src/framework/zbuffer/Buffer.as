@@ -1,138 +1,79 @@
 package framework.zbuffer
 {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	
-	import framework.Camera;
-	import framework.RenderObject;
-
-	import framework.Debug;
+	import flash.display.*;
+	import flash.geom.*;
+	import framework.*;
 
 	public class Buffer
 	{
+		public var 
+			node         : TreeNode,
+			info_list    : Vector.<RenderInfo>,
+			world_rect   : Rectangle;
+
 		private var 
-			_objects     : Vector.<RenderObject>,
-			//_default     : Vector.<uint>,
-			_world_rect  : Rectangle,
-			_render_pos  : Point,
-			_render_obj  : RenderObject,
-			_render_rect : Rectangle,
-			_render_list : Vector.<uint>,
-			_render_rects: Vector.<Rectangle>;
-
-		public function Buffer(w_rect:Rectangle)
+			_info_size    : uint,
+			_pre_render   : Boolean,
+			_render_size  : uint,
+			_render_list  : Vector.<RenderInfo>;
+			
+		public function Buffer(rect:Rectangle, node:TreeNode)
 		{
-			_world_rect = w_rect;
-			_render_pos = new Point(0, 0);
-			_objects = new Vector.<RenderObject>();
-			_render_rects = new Vector.<Rectangle>();
-
-			//var bmd:BitmapData = new BitmapData(_world_rect.width, _world_rect.height, true, 0);
-			//_default = bmd.getVector(bmd.rect);
+			world_rect = rect;
+			info_list = new Vector.<RenderInfo>(20, true);
+			_render_list = new Vector.<RenderInfo>(20, true);
 		}
 
-		public function add_object(robj:RenderObject):void
+		public function add_info(info:RenderInfo):void
 		{
-			_objects.push(robj);	
-			_render_rects.push(_world_rect.intersection(robj.world_rect))
-		}
+			if (!_pre_render) _pre_render = true;
 
-		public function remove_object(robj:RenderObject):void
-		{
-			var index : int = _objects.indexOf(robj);
-
-			if (index != -1)
+			if (_info_size == info_list.length)
 			{
-				_objects.splice(index, 1);
+				Debug.logError('add_info: out of size!');
+
+				for (var i:uint=0; i<_info_size; ++i) info_list[i] = info_list[i+1];
+				info_list[_info_size - 1] = info;
+
+				return;
+			}
+
+			info_list[_info_size++] = info;
+		}
+
+		public function remove_info(info:RenderInfo):void
+		{
+			if (!_pre_render) _pre_render = true;
+
+			var i:int = info_list.indexOf(info);
+
+			if (i != -1)
+			{
+				--_info_size;
+				info_list[i] = null;
+				for (var b:uint=i; b<_info_size; ++b) info_list[b] = info_list[b+1];
+				info_list[_info_size] = null;
 			}
 		}
 
-		public function render_list():void
+		public function reset():void
 		{
-			var 
-				tmp_rect     : Rectangle,
-				rect_area    : int,
-				inster_area  : int,
-				render_area  : int,
-				render_rect  : Rectangle,
-				inster_rect  : Rectangle,
-				render_index : Vector.<uint>;
+			_info_size = 0;	
 
-			render_index = new Vector.<uint>();
-
-			for (var index:int = _objects.length; index > 0 ; --index)
-			{
-				_render_obj = _objects[index - 1];
-				inster_rect = _render_rects[index - 1];
-				inster_area = inster_rect.width * inster_rect.height;
-
-				if (!render_rect)
-				{
-					render_rect = inster_rect;
-					render_area = inster_area;
-					render_index.push(index - 1);
-
-					continue;
-				}
-
-				rect_area = render_rect.width * render_rect.height;
-
-				if (render_rect.containsRect(inster_rect) 
-						&& render_area == rect_area)
-				{
-					continue;
-				}
-
-				if (render_rect.equals(inster_rect) 
-						&& render_area == rect_area)
-				{
-					continue;
-				}
-
-				render_rect = render_rect.union(inster_rect);
-				render_area += inster_area;
-				render_index.push(index - 1);				
-
-				if (render_rect.intersects(inster_rect))
-				{
-					tmp_rect = render_rect.intersection(inster_rect);
-					render_area -= tmp_rect.width * tmp_rect.height;
-				}
-
-				if (render_rect.equals(_world_rect) 
-						&& render_area == _world_rect.width * _world_rect.height)
-				{
-					_render_list = render_index.reverse();
-				}
-			}
-
-			_render_list = render_index.reverse();
+			if (!_pre_render) _pre_render = true;
 		}
 
-		public function render(camera:Camera):void
+		public function render(target:BitmapData, source:BitmapData):void
 		{
-			//_render_list = render_list;
-
-			//camera.bitmapData.setVector(_world_rect, _default);
-
-			//for (var index:int = 0; index < _objects.length; ++index)
-			for each(var index:uint in _render_list)
+			if (_pre_render)
 			{
-				_render_obj = _objects[index];
-				_render_rect = _render_rects[index];
+				_render_size = 0;
+				//TODO new list
 
-				_render_pos.x = _render_rect.x;
-				_render_pos.y = _render_rect.y;
-
-				_render_rect.x = _render_rect.x - (_render_obj.world_rect.x - _render_obj.atlas_rect.x);
-				_render_rect.y = _render_rect.y - (_render_obj.world_rect.y - _render_obj.atlas_rect.y);
-
-				camera.bitmapData.copyPixels(_render_obj.atlas, 
-					_render_rect, _render_pos, null, null, true);
+				_pre_render = false;
 			}
+		
+			//TODO render
 		}
 	}
 }
